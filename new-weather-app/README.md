@@ -26,6 +26,3 @@ To run the application locally, follow these steps:
 5. Run the app using `npm start`.
 6. Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
