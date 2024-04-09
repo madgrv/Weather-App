@@ -1,0 +1,22 @@
+// helpers.js
+
+export const APIKEY = '6f8ae8c028d2cc301f42425357121375';
+
+// function to create a flag emoji from ASCII
+export function getFlagEmoji(countryCode) {
+	const countryCodeUpperCase = countryCode.toUpperCase();
+	const OFFSET = 127397;
+	return countryCodeUpperCase
+		.split('')
+		.map((char) => String.fromCodePoint(char.charCodeAt(0) + OFFSET))
+		.join('');
+}
+
+// helper function to convert unix timestamp into time format (hh:mm)
+export function convertTimestamp(timestamp) {
+	return new Date(timestamp * 1000).toLocaleTimeString([], {
+		hour: '2-digit',
+		minute: '2-digit',
+		// hour12: false,
+	});
+}
