@@ -6,7 +6,7 @@ This is a simple weather application that allows users to view weather informati
 
 - **Search:** Users can search for a location by entering its name.
 - **Weather Display:** Displays current weather information for the selected location, including temperature, humidity, wind speed, and more.
-- **Graphical Representation:** Utilizes graphs to visually represent weather data, such as temperature and humidity.
+- **Graphical Representation:** Utilizes graphs to visually represent weather data, such as humidity.
 - **Responsive Design:** The app is designed to be responsive and works well on both desktop and mobile devices.
 
 ## Technologies Used
