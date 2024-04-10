@@ -30,7 +30,7 @@ const Input = styled.input`
 	font-size: 1em;
 	height: 3em;
 	width: 70%;
-	max-width: 20em;
+	min-width: 28em;
 	padding: 0 10px;
 	border: 2px solid hsl(250, 50%, 50%);
 	border-radius: 4px 0px 0px 4px;
@@ -38,7 +38,7 @@ const Input = styled.input`
 
 const Button = styled.button`
 	font-size: 1em;
-	height: 3.25em;
+	height: 3em;
 	width: 40%;
 	max-width: 7em;
 	padding: 10px 20px;

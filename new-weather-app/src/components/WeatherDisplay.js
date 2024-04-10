@@ -32,8 +32,8 @@ const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 
 	return (
 		<>
-			<h3>Weather for:</h3>
 			<Container>
+				<p>Weather for:</p>
 				<Heading>
 					{selectedLocation.name},{' '}
 					{selectedLocation.state && selectedLocation.state + ', '}
@@ -80,19 +80,19 @@ const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 const Container = styled.div`
 	background-color: hsl(0, 0%, 100%);
 	padding: 20px;
-	min-width: 450px;
+	min-width: 550px;
 	border-radius: 8px;
 	margin-top: 20px;
 	box-shadow: 0 0px 40px hsl(250, 10%, 90%);
 
 	/* Media query for smaller screens */
-	@media (max-width: 768px) {
+	/* @media (max-width: 768px) {
 		padding: 10px;
-		min-width: 300px; /* Adjust the minimum width for smaller screens */
-	}
+		min-width: 300px;
+	} */
 `;
 
-const Heading = styled.h1`
+const Heading = styled.h2`
 	color: #333;
 `;
 
