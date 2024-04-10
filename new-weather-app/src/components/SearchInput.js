@@ -1,25 +1,54 @@
 import React from 'react';
 import styled from 'styled-components';
+import LocationDisplay from './LocationDisplay';
 
-const SearchInput = ({ userInput, setUserInput, handleSearch }) => {
+const SearchInput = ({
+	userInput,
+	setUserInput,
+	locations,
+	handleSearch,
+	handleLocationSelect,
+}) => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		handleSearch();
 	};
 
 	return (
-		<Form onSubmit={handleSubmit}>
-			<Input
-				type="text"
-				value={userInput}
-				onChange={(e) => setUserInput(e.target.value)}
-				placeholder="Enter city name"
-				required
-			/>
-			<Button type="submit">Search</Button>
-		</Form>
+		<SearchInputWrapper>
+			<Form onSubmit={handleSubmit}>
+				<Input
+					type="text"
+					value={userInput}
+					onChange={(e) => setUserInput(e.target.value)}
+					placeholder="Enter city name"
+					required
+				/>
+				<Button type="submit">Search</Button>
+			</Form>
+			{locations.length > 0 && (
+				<LocationDisplay
+					locations={locations}
+					handleLocationSelect={handleLocationSelect}
+					setUserInput={setUserInput}
+				/>
+			)}
+		</SearchInputWrapper>
 	);
 };
+
+const SearchInputWrapper = styled.div`
+	/* min-width: 28em;
+	font-size: 1em; */
+
+	@media (max-width: 428px) {
+		min-width: 15.6em;
+	}
+
+	/* min-width: 27em; */
+	/* flex-wrap: wrap; */
+	/* overflow: auto; */
+`;
 
 const Form = styled.form`
 	display: flex;
@@ -27,13 +56,15 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-	font-size: 1em;
 	height: 3em;
-	width: 70%;
-	min-width: 28em;
+	width: 100%;
 	padding: 0 10px;
 	border: 2px solid hsl(250, 50%, 50%);
 	border-radius: 4px 0px 0px 4px;
+
+	/* @media (max-width: 768px) {
+		min-width: 15.6em;
+	} */
 `;
 
 const Button = styled.button`

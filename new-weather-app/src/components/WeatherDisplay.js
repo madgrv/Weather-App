@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import Container from './Container';
 import { getFlagEmoji, convertTimestamp, getTimezoneName } from '../helpers';
 import Graph from './Graph';
 
@@ -41,13 +42,15 @@ const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 				</Heading>
 			</Container>
 			<Container>
-				<p>
-					Lat: {selectedLocation.lat}, <br />
-					Lon: {selectedLocation.lon} <br />
-					Timezone: {getTimezoneName(weatherData.timezone)}
-				</p>
+				<p>Current temperature: {Math.ceil(weatherData.main.temp)}°C</p>
+			</Container>
+			<Container>
 				<Info>
-					<p>Current temperature: {Math.ceil(weatherData.main.temp)}°C</p>
+					<p>
+						Lat: {selectedLocation.lat}, <br />
+						Lon: {selectedLocation.lon} <br />
+						Timezone: {getTimezoneName(weatherData.timezone)}
+					</p>
 					{/* <p>Humidity: {weatherData.main.humidity}%</p> */}
 					<p>Feels like: {Math.ceil(weatherData.main.feels_like)}°C</p>
 					<p>
@@ -77,20 +80,21 @@ const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 	);
 };
 
-const Container = styled.div`
-	background-color: hsl(0, 0%, 100%);
-	padding: 20px;
-	min-width: 550px;
-	border-radius: 8px;
-	margin-top: 20px;
-	box-shadow: 0 0px 40px hsl(250, 10%, 90%);
+// const Container = styled.div`
+// 	background-color: hsl(0, 0%, 100%);
+// 	padding: 20px;
+// 	min-width: 550px;
+// 	border-radius: 8px;
+// 	margin-top: 20px;
+// 	box-shadow: 0 0px 40px hsl(250, 10%, 90%);
 
-	/* Media query for smaller screens */
-	/* @media (max-width: 768px) {
-		padding: 10px;
-		min-width: 300px;
-	} */
-`;
+// 	/* Media query for smaller screens */
+// 	@media (max-width: 428px) {
+// 		padding: 10px;
+// 		min-width: 21em;
+// 		flex-direction: column;
+// 	}
+// `;
 
 const Heading = styled.h2`
 	color: #333;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+// import Container from './Container';
 import SearchInput from './SearchInput';
-import LocationDisplay from './LocationDisplay';
 import WeatherDisplay from './WeatherDisplay';
 import { APIKEY } from '../helpers';
 
@@ -29,42 +29,27 @@ const AppContainer = () => {
 		setLocations([]);
 	};
 
-	// console.log(selectedLocation);
-
 	return (
-		<Container>
-			<SearchInputWrapper>
-				<SearchInput
-					userInput={userInput}
-					setUserInput={setUserInput}
-					handleSearch={handleSearch}
-				/>
-				{locations.length > 0 && (
-					<LocationDisplay
-						locations={locations}
-						handleLocationSelect={handleLocationSelect}
-						setUserInput={setUserInput}
-					/>
-				)}
-			</SearchInputWrapper>
+		<Wrapper>
+			<SearchInput
+				locations={locations}
+				userInput={userInput}
+				setUserInput={setUserInput}
+				handleSearch={handleSearch}
+				handleLocationSelect={handleLocationSelect}
+			/>
 			{selectedLocation && (
 				<WeatherDisplay selectedLocation={selectedLocation} APIKEY={APIKEY} />
 			)}
-		</Container>
+		</Wrapper>
 	);
 };
 
-const Container = styled.div`
+const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin: 10px;
-`;
-
-const SearchInputWrapper = styled.div`
-	/* max-width: 27em; */
-	/* flex-wrap: wrap; */
-	/* overflow: auto; */
+	margin: 20px;
 `;
 
 export default AppContainer;
