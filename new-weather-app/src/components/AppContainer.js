@@ -29,7 +29,7 @@ const AppContainer = () => {
 		setLocations([]);
 	};
 
-	console.log(selectedLocation);
+	// console.log(selectedLocation);
 
 	return (
 		<Container>

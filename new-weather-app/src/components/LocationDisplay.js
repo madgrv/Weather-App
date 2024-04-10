@@ -36,7 +36,7 @@ const StyledList = styled.ol`
 	/* border-top: none; */
 	list-style-type: none;
 	z-index: 1;
-	box-shadow: 0 15px 15px hsl(250, 20%, 85%);
+	box-shadow: 0 15px 30px hsl(250, 10%, 90%);
 	max-width: 20em;
 `;
 

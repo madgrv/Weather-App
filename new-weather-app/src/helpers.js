@@ -20,3 +20,16 @@ export function convertTimestamp(timestamp) {
 		// hour12: false,
 	});
 }
+
+// Function to convert timezone data to UTC readable values
+export function getTimezoneName(timezoneOffset) {
+	// Adjust the timezone name based on the offset
+	const hours = Math.floor(Math.abs(timezoneOffset) / 3600);
+	const minutes = Math.abs(timezoneOffset % 3600) / 60;
+	const sign = timezoneOffset >= 0 ? '+' : '-';
+	const offsetString = `${sign}${hours.toString().padStart(2, '0')}:${minutes
+		.toString()
+		.padStart(2, '0')}`;
+
+	return `UTC${offsetString}`;
+}
