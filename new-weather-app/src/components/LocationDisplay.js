@@ -27,17 +27,18 @@ export default function LocationDisplay({
 }
 
 const StyledList = styled.ol`
-	position: relative;
+	color: #777;
+	font-size: 1em;
+	font-weight: 700;
+	position: absolute;
 	margin-top: 0;
 	padding: 0;
 	background-color: white;
 	border: 4px solid white;
 	border-radius: 0px 0px 4px 4px;
-	/* border-top: none; */
 	list-style-type: none;
 	z-index: 1;
 	box-shadow: 0 15px 30px hsl(250, 10%, 90%);
-	max-width: 20em;
 `;
 
 const StyledListItem = styled.li`

@@ -14,6 +14,8 @@ const SearchInput = ({
 		handleSearch();
 	};
 
+	console.log('SearchInput render');
+
 	return (
 		<SearchInputWrapper>
 			<Form onSubmit={handleSubmit}>
@@ -38,16 +40,21 @@ const SearchInput = ({
 };
 
 const SearchInputWrapper = styled.div`
-	/* min-width: 28em;
-	font-size: 1em; */
+	position: sticky;
+	top: 5px;
+	min-width: 620px;
+	margin-bottom: 10px;
+	width: 100%;
+	max-width: 780px;
 
-	@media (max-width: 428px) {
-		min-width: 15.6em;
+	@media (max-width: 839px) {
+		max-width: 640px;
 	}
 
-	/* min-width: 27em; */
-	/* flex-wrap: wrap; */
-	/* overflow: auto; */
+	@media (max-width: 640px) {
+		width: 100%;
+		min-width: 20em;
+	}
 `;
 
 const Form = styled.form`
@@ -61,10 +68,6 @@ const Input = styled.input`
 	padding: 0 10px;
 	border: 2px solid hsl(250, 50%, 50%);
 	border-radius: 4px 0px 0px 4px;
-
-	/* @media (max-width: 768px) {
-		min-width: 15.6em;
-	} */
 `;
 
 const Button = styled.button`
@@ -81,4 +84,4 @@ const Button = styled.button`
 	cursor: pointer;
 `;
 
-export default SearchInput;
+export default React.memo(SearchInput);

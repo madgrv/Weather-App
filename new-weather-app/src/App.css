@@ -68,3 +68,15 @@ h6 {
 #__next {
 	isolation: isolate;
 }
+
+/*  */
+
+body {
+	color: #333;
+	font-size: 1em;
+	font-weight: 600;
+}
+
+span {
+	font-size: 2em;
+}

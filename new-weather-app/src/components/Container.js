@@ -1,21 +1,25 @@
 import styled from 'styled-components';
 
-export default function Container({ children }) {
-	return <Wrapper>{children}</Wrapper>;
+export default function Container({ size, children }) {
+	return <Wrapper size={size}>{children}</Wrapper>;
 }
 
 const Wrapper = styled.div`
 	background-color: hsl(0, 0%, 100%);
 	padding: 20px;
-	min-width: 600px;
+	margin: 10px;
+	width: 100%;
+	max-width: ${({ size }) => (size ? `${size}%` : '380px')};
 	border-radius: 8px;
-	margin-top: 20px;
-	box-shadow: 0 0px 40px hsl(250, 10%, 90%);
+	box-shadow: 0 0px 40px hsl(250, 20%, 90%);
+	transition: 0.3s;
 
-	/* Media query for smaller screens */
-	@media (max-width: 428px) {
+	@media (max-width: 839px) {
+		max-width: 640px;
+	}
+
+	@media (max-width: 640px) {
 		padding: 10px;
-		min-width: 21.5em;
-		flex-direction: column;
+		max-width: 640px;
 	}
 `;

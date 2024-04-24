@@ -31,5 +31,24 @@ export function getTimezoneName(timezoneOffset) {
 		.toString()
 		.padStart(2, '0')}`;
 
-	return `UTC${offsetString}`;
+	// return `UTC${offsetString}`;
+	return offsetString;
+}
+
+// Function to get weather icon based on weather description
+export function getWeatherIcon(weatherDescription) {
+	const weatherIcons = {
+		Clear: '☀️',
+		Clouds: '☁️',
+		Rain: '🌧️',
+		Thunderstorm: '⛈️',
+		Drizzle: '🌦️',
+		Snow: '❄️',
+	};
+
+	const condition = Object.keys(weatherIcons).find((key) =>
+		weatherDescription.toLowerCase().includes(key.toLowerCase())
+	);
+
+	return weatherIcons[condition] || '';
 }

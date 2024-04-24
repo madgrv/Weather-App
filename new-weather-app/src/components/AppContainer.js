@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-// import Container from './Container';
+// import styled from 'styled-components';
+import HorizontalWrapper from './HorizontalWrapper';
+import VerticalWrapper from './VerticalWrapper';
+import Title from './Title';
+import Paragraph from './Paragraph';
+import BoldText from './BoldText';
+import DateDisplay from './DateDisplay';
 import SearchInput from './SearchInput';
 import WeatherDisplay from './WeatherDisplay';
 import { APIKEY } from '../helpers';
+import Container from './Container';
 
 const AppContainer = () => {
 	const [userInput, setUserInput] = useState('');
@@ -30,26 +36,41 @@ const AppContainer = () => {
 	};
 
 	return (
-		<Wrapper>
-			<SearchInput
-				locations={locations}
-				userInput={userInput}
-				setUserInput={setUserInput}
-				handleSearch={handleSearch}
-				handleLocationSelect={handleLocationSelect}
-			/>
-			{selectedLocation && (
-				<WeatherDisplay selectedLocation={selectedLocation} APIKEY={APIKEY} />
-			)}
-		</Wrapper>
+		<>
+			<VerticalWrapper>
+				<HorizontalWrapper justify={'space-between'}>
+					<Title>WeatherUp!</Title>
+					<Paragraph>World Weather</Paragraph>
+					<DateDisplay />
+				</HorizontalWrapper>
+			</VerticalWrapper>
+			<VerticalWrapper>
+				<SearchInput
+					locations={locations}
+					userInput={userInput}
+					setUserInput={setUserInput}
+					handleSearch={handleSearch}
+					handleLocationSelect={handleLocationSelect}
+				/>
+				{selectedLocation ? (
+					<WeatherDisplay selectedLocation={selectedLocation} APIKEY={APIKEY} />
+				) : (
+					<>
+						<VerticalWrapper>
+							<Paragraph>
+								<BoldText>Welcome to WeatherUp! 🌤️</BoldText>
+							</Paragraph>
+						</VerticalWrapper>
+						<Paragraph>
+							Enter a city name to check the weather and stay informed about
+							current conditions. Get started by typing in the search box above.
+							Happy exploring!
+						</Paragraph>
+					</>
+				)}
+			</VerticalWrapper>
+		</>
 	);
 };
-
-const Wrapper = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin: 20px;
-`;
 
 export default AppContainer;

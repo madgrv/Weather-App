@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import Container from './Container';
+import Paragraph from './Paragraph';
+import BoldText from './BoldText';
 
 const Graph = ({ value, title }) => {
 	return (
 		<GraphContainer>
-			<Title>
-				{title}: {value}%
-			</Title>
+			<Paragraph>
+				{title}:<BoldText> {value}%</BoldText>
+			</Paragraph>
 			<GraphBar>
 				<Filler value={value} />
 			</GraphBar>
@@ -15,16 +18,19 @@ const Graph = ({ value, title }) => {
 };
 
 const GraphContainer = styled.div`
+	padding: 20px;
+	/* margin: 10px; */
 	width: 100%;
 	height: auto;
-	position: relative;
+	/* position: relative; */
 `;
 
-const Title = styled.h3`
-	margin: 4px;
-`;
+// const Title = styled.h3`
+// 	margin: 4px;
+// `;
 
 const GraphBar = styled.div`
+	margin: 10px;
 	width: 100%;
 	height: 20px;
 	background-color: #f0f0f0;

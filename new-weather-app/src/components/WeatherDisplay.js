@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Container from './Container';
-import { getFlagEmoji, convertTimestamp, getTimezoneName } from '../helpers';
+import RowWrapper from './RowWrapper';
+import Heading from './Heading';
+import BoldText from './BoldText';
+import Paragraph from './Paragraph';
+import DateDisplay from './DateDisplay';
+import {
+	getFlagEmoji,
+	convertTimestamp,
+	getTimezoneName,
+	getWeatherIcon,
+} from '../helpers';
 import Graph from './Graph';
 
 const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 	const [weatherData, setWeatherData] = useState(null);
+
+	console.log('Weather display render');
 
 	useEffect(() => {
 		const fetchWeatherData = async () => {
@@ -22,7 +34,7 @@ const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 
 		fetchWeatherData();
 
-		console.log('Fetched Data');
+		console.log('Fetched weatherData');
 	}, [selectedLocation, APIKEY]);
 
 	if (!weatherData) {
@@ -33,76 +45,96 @@ const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 
 	return (
 		<>
-			<Container>
-				<p>Weather for:</p>
-				<Heading>
-					{selectedLocation.name},{' '}
-					{selectedLocation.state && selectedLocation.state + ', '}
-					{selectedLocation.country} {getFlagEmoji(selectedLocation.country)}
-				</Heading>
-			</Container>
-			<Container>
-				<p>Current temperature: {Math.ceil(weatherData.main.temp)}°C</p>
-			</Container>
-			<Container>
-				<Info>
-					<p>
-						Lat: {selectedLocation.lat}, <br />
-						Lon: {selectedLocation.lon} <br />
-						Timezone: {getTimezoneName(weatherData.timezone)}
-					</p>
-					{/* <p>Humidity: {weatherData.main.humidity}%</p> */}
-					<p>Feels like: {Math.ceil(weatherData.main.feels_like)}°C</p>
-					<p>
-						Max: {Math.ceil(weatherData.main.temp_max)}°C
+			<Paragraph>Weather for:</Paragraph>
+			<Heading>
+				{selectedLocation.name},{' '}
+				{selectedLocation.state && selectedLocation.state + ', '}
+				{selectedLocation.country} {getFlagEmoji(selectedLocation.country)}
+				<DateDisplay UTC={weatherData.timezone} data={weatherData} />
+			</Heading>
+			<RowWrapper>
+				<Container>
+					<Paragraph>
+						Description:{' '}
+						<BoldText>{weatherData.weather[0].description}</BoldText>
+					</Paragraph>
+					<Paragraph>
+						Visibility:
+						<BoldText> {weatherData.visibility / 1000} Km</BoldText>
+					</Paragraph>
+					<Paragraph>
+						<span>{getWeatherIcon(weatherData.weather[0].description)}</span>
+					</Paragraph>
+				</Container>
+				<Container>
+					<Paragraph>
+						Current temperature:
+						<BoldText> {Math.ceil(weatherData.main.temp)}°C</BoldText>
+					</Paragraph>
+					<Paragraph>
+						Feels like:
+						<BoldText> {Math.ceil(weatherData.main.feels_like)}°C</BoldText>
+					</Paragraph>
+					<Paragraph>
+						Max:
+						<BoldText> {Math.ceil(weatherData.main.temp_max)}°C</BoldText>
 						<br />
-						Min: {Math.ceil(weatherData.main.temp_min)}°C
-					</p>
-					<p>Description: {weatherData.weather[0].description}</p>
-					<p>Visibility: {weatherData.visibility / 1000}Km</p>
-					<p>Pressure: {weatherData.main.pressure}hPa</p>
-					<p>Wind: {weatherData.wind.speed}m/s</p>
-					<p>
-						Sunrise: {convertTimestamp(weatherData.sys.sunrise)}
+						Min:
+						<BoldText> {Math.ceil(weatherData.main.temp_min)}°C</BoldText>
+					</Paragraph>
+				</Container>
+				<Container>
+					<Graph
+						value={weatherData.main.humidity}
+						title="Humidity"
+						color={'green'}
+					/>
+				</Container>
+				<Container>
+					<Paragraph>
+						Sunrise:
+						<BoldText> {convertTimestamp(weatherData.sys.sunrise)}</BoldText>
 						<br />
-						Sunset: {convertTimestamp(weatherData.sys.sunset)}
-					</p>
-				</Info>
-			</Container>
-			<Container>
-				<Graph
-					value={weatherData.main.humidity}
-					title="Humidity"
-					color={'green'}
-				/>
-			</Container>
+						Sunset:
+						<BoldText> {convertTimestamp(weatherData.sys.sunset)}</BoldText>
+					</Paragraph>
+				</Container>
+				<Container>
+					<Paragraph>
+						Wind:
+						<BoldText> {weatherData.wind.speed} m/s</BoldText>
+					</Paragraph>
+					<Paragraph>
+						Pressure:
+						<BoldText> {weatherData.main.pressure} hPa</BoldText>
+					</Paragraph>
+				</Container>
+				<Container>
+					<Paragraph>
+						Timezone:
+						<BoldText> UTC {getTimezoneName(weatherData.timezone)}</BoldText>
+						<Paragraph>
+							Lat:<BoldText> {selectedLocation.lat},</BoldText>
+							<br />
+							Lon:
+							<BoldText> {selectedLocation.lon}</BoldText>
+						</Paragraph>
+					</Paragraph>
+				</Container>
+			</RowWrapper>
+
+			<RowWrapper></RowWrapper>
+
+			<RowWrapper></RowWrapper>
 		</>
 	);
 };
 
-// const Container = styled.div`
-// 	background-color: hsl(0, 0%, 100%);
-// 	padding: 20px;
-// 	min-width: 550px;
-// 	border-radius: 8px;
-// 	margin-top: 20px;
-// 	box-shadow: 0 0px 40px hsl(250, 10%, 90%);
-
-// 	/* Media query for smaller screens */
-// 	@media (max-width: 428px) {
-// 		padding: 10px;
-// 		min-width: 21em;
-// 		flex-direction: column;
-// 	}
+// const Info = styled.p`
+// 	margin-top: 10px;
+// 	font-weight: 600;
+// 	font-size: 1em;
 // `;
-
-const Heading = styled.h2`
-	color: #333;
-`;
-
-const Info = styled.div`
-	margin-top: 10px;
-`;
 
 const Loading = styled.p`
 	color: hsl(250, 50%, 50%);
