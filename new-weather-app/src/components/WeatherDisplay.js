@@ -49,7 +49,7 @@ const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 			<Heading>
 				{selectedLocation.name},{' '}
 				{selectedLocation.state && selectedLocation.state + ', '}
-				{selectedLocation.country} {getFlagEmoji(selectedLocation.country)}
+				{selectedLocation.country}{' '}{getFlagEmoji(selectedLocation.country)}
 				<DateDisplay UTC={weatherData.timezone} data={weatherData} />
 			</Heading>
 			<RowWrapper>
