@@ -6,5 +6,5 @@ export default function BoldText({ children }) {
 }
 
 const Bold = styled.strong`
-	color: #333;
+	color: #333; // change into variable --strong-text-color or theme provider
 `;

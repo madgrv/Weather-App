@@ -5,7 +5,7 @@ export default function Container({ size, children }) {
 }
 
 const Wrapper = styled.div`
-	background-color: hsl(0, 0%, 100%);
+	background-color: hsl(0, 0%, 100%); // change into  variable --card-background or theme provider
 	padding: 20px;
 	margin: 10px;
 	width: 100%;

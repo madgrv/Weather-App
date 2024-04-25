@@ -14,6 +14,7 @@ const AppContainer = () => {
 	const [userInput, setUserInput] = useState('');
 	const [locations, setLocations] = useState([]);
 	const [selectedLocation, setSelectedLocation] = useState(null);
+	const [darkMode, setDarkMode] = React.useState(false) //start implementing dark mode functionality
 
 	const handleSearch = async () => {
 		try {

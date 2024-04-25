@@ -25,7 +25,7 @@ export default function LocationDisplay({
 }
 
 const StyledList = styled.ol`
-	color: #777;
+	color: #777; //add variable --primary-text-color or theme provider
 	font-size: 1em;
 	font-weight: 700;
 	position: absolute;
@@ -43,7 +43,7 @@ const StyledListItem = styled.li`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 16px;
+	padding: 12px;
 	border-radius: 3px 3px 3px 3px;
 	cursor: pointer;
 	transition: 0.5s;

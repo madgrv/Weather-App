@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Container from './Container';
 import Paragraph from './Paragraph';
 import BoldText from './BoldText';
 
@@ -28,7 +27,7 @@ const GraphBar = styled.div`
 	margin: 10px;
 	width: 100%;
 	height: 20px;
-	background-color: #f0f0f0;
+	background-color: #f0f0f0; // change to variable --background-color or theme provider
 	border-radius: 10px;
 	overflow: hidden;
 `;
