@@ -40,7 +40,9 @@ const StyledList = styled.ol`
 `;
 
 const StyledListItem = styled.li`
-	align-self: center;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	padding: 16px;
 	border-radius: 3px 3px 3px 3px;
 	cursor: pointer;
