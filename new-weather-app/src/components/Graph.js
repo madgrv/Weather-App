@@ -19,15 +19,10 @@ const Graph = ({ value, title }) => {
 
 const GraphContainer = styled.div`
 	padding: 20px;
-	/* margin: 10px; */
 	width: 100%;
 	height: auto;
-	/* position: relative; */
 `;
 
-// const Title = styled.h3`
-// 	margin: 4px;
-// `;
 
 const GraphBar = styled.div`
 	margin: 10px;

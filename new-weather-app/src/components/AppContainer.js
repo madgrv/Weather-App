@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import styled from 'styled-components';
 import HorizontalWrapper from './HorizontalWrapper';
 import VerticalWrapper from './VerticalWrapper';
 import Title from './Title';
@@ -9,7 +8,7 @@ import DateDisplay from './DateDisplay';
 import SearchInput from './SearchInput';
 import WeatherDisplay from './WeatherDisplay';
 import { APIKEY } from '../helpers';
-import Container from './Container';
+
 
 const AppContainer = () => {
 	const [userInput, setUserInput] = useState('');

@@ -130,11 +130,6 @@ const WeatherDisplay = ({ selectedLocation, APIKEY }) => {
 	);
 };
 
-// const Info = styled.p`
-// 	margin-top: 10px;
-// 	font-weight: 600;
-// 	font-size: 1em;
-// `;
 
 const Loading = styled.p`
 	color: hsl(250, 50%, 50%);

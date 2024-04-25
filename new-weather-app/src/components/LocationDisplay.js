@@ -1,5 +1,3 @@
-// LocationDisplay.js
-
 import React from 'react';
 import { getFlagEmoji } from '../helpers';
 import styled from 'styled-components';
