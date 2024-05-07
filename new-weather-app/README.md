@@ -1,7 +1,6 @@
 # Weather App
 
-This is a simple weather application that allows users to view weather information for different locations around the world.
-
+This is a simple weather application with a dashboard that allows users to view weather information for different locations around the world.
 ## Features
 
 - **Search:** Users can search for a location by entering its name.
