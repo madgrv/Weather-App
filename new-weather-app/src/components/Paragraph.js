@@ -10,7 +10,7 @@ export default function Paragraph({ children }) {
 }
 
 const StyledP = styled.p`
-	color: #777; // // change into variable --primary-text-color or theme provider
+	color: ${({theme}) => theme.primaryTextColor};
 	font-size: 1em;
 	font-weight: 600;
 	text-align: center;

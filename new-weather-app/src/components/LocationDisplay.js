@@ -25,8 +25,7 @@ export default function LocationDisplay({
 }
 
 const StyledList = styled.ol`
-	color: #777; //add variable --primary-text-color or theme provider
-	font-size: 1em;
+	color: ${({theme}) => theme.primaryTextColor}; 
 	font-weight: 700;
 	position: absolute;
 	margin-top: 0;

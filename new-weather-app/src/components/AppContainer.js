@@ -4,17 +4,17 @@ import VerticalWrapper from './VerticalWrapper';
 import Title from './Title';
 import Paragraph from './Paragraph';
 import BoldText from './BoldText';
+import Toggle from './Toggle';
 import DateDisplay from './DateDisplay';
 import SearchInput from './SearchInput';
 import WeatherDisplay from './WeatherDisplay';
 import { APIKEY } from '../helpers';
 
 
-const AppContainer = () => {
+const AppContainer = ({ toggleTheme }) => {
 	const [userInput, setUserInput] = useState('');
 	const [locations, setLocations] = useState([]);
 	const [selectedLocation, setSelectedLocation] = useState(null);
-	const [darkMode, setDarkMode] = React.useState(false) //start implementing dark mode functionality
 
 	const handleSearch = async () => {
 		try {
@@ -42,6 +42,7 @@ const AppContainer = () => {
 					<Title>WeatherUp!</Title>
 					<Paragraph>World Weather</Paragraph>
 					<DateDisplay />
+					<Toggle label="Dark Mode" toggleTheme={toggleTheme} />
 				</HorizontalWrapper>
 			</VerticalWrapper>
 			<VerticalWrapper>
