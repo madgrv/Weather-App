@@ -12,6 +12,7 @@ This is a simple weather application with a dashboard that allows users to view 
 ## Technologies Used
 
 - React.js
+- TypeScript
 - Styled Components
 - OpenWeatherMap API
 
