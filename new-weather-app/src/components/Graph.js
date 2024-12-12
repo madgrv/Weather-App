@@ -27,7 +27,7 @@ const GraphBar = styled.div`
 	margin: 10px;
 	width: 100%;
 	height: 20px;
-	background-color: #f0f0f0; // change to variable --background-color or theme provider
+	background-color: ${props => props.theme.backgroundColor};
 	border-radius: 10px;
 	overflow: hidden;
 `;

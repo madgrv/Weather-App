@@ -66,7 +66,7 @@ const Input = styled.input`
 	height: 3em;
 	width: 100%;
 	padding: 0 10px;
-	border: 2px solid hsl(250, 50%, 50%);
+	border: 2px solid ${({theme}) => theme.brandColor};
 	border-radius: 4px 0px 0px 4px;
 `;
 
@@ -76,10 +76,10 @@ const Button = styled.button`
 	width: 40%;
 	max-width: 7em;
 	padding: 10px 20px;
-	background-color: hsl(250, 50%, 50%);
+	background-color: ${({theme}) => theme.brandColor};
+	border: 2px solid ${({theme}) => theme.brandColor};
 	color: hsl(45, 29%, 97%);
 	font-weight: 900;
-	border: 2px solid hsl(250, 50%, 50%);
 	border-radius: 0px 4px 4px 0px;
 	cursor: pointer;
 `;
