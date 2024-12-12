@@ -1,7 +1,7 @@
 /*  */
 
 html {
-	background-color: var(--background-color);
+	background-color: hsl(45, 29%, 97%);
 
 	/* font-size: 1em; */
 }
@@ -71,20 +71,8 @@ h6 {
 
 /*  */
 
-:root {
-	--brand-color: hsl(250, 50%, 50%);
-
-	--background-color: hsl(45, 29%, 97%);
-	--primary-text-color: #777;
-	--strong-text-color: #333;
-
-	--dark-background-color: #333;
-	--dark-primary-text-color: #bcbcbc;
-	--dark-strong-text-color: #fff;
-}
-
 body {
-	/* color: var(--strong-text-color); */
+	color: #333;
 	font-size: 1em;
 	font-weight: 600;
 }
@@ -92,4 +80,3 @@ body {
 span {
 	font-size: 2em;
 }
-
