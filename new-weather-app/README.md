@@ -1,6 +1,7 @@
 # Weather App
 
 This is a simple weather application with a dashboard that allows users to view weather information for different locations around the world.
+
 ## Features
 
 - **Search:** Users can search for a location by entering its name.
@@ -11,6 +12,7 @@ This is a simple weather application with a dashboard that allows users to view 
 ## Technologies Used
 
 - React.js
+- TypeScript
 - Styled Components
 - OpenWeatherMap API
 
