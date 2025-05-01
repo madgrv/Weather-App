@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { DateWrapper, Info } from "./DateDisplay.styled";
 
 type DateDisplayProps = {
@@ -13,10 +13,10 @@ export const DateDisplay = ({ UTC }: DateDisplayProps) => {
 		year: 'numeric' as const,
 	};
 
-	const timeOptions = {
+	const timeOptions = useMemo(() => ({
 		hour: '2-digit' as const,
 		minute: '2-digit' as const,
-	};
+	}), []);
 
 	const [time, setTime] = useState(
 		new Date(Date.now() + ((UTC ?? 0) - 3600) * 1000).toLocaleTimeString(
@@ -42,7 +42,7 @@ export const DateDisplay = ({ UTC }: DateDisplayProps) => {
 		const intervalID = setInterval(getTime, 1000);
 
 		return () => clearInterval(intervalID);
-	}, []);
+	}, [UTC, timeOptions]);
 
 	return (
 		<>
