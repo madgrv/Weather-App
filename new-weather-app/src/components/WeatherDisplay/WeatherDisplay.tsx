@@ -23,8 +23,9 @@ export const WeatherDisplay = ({ selectedLocation, APIKEY }: WeatherDisplayProps
 	useEffect(() => {
 		const fetchWeatherData = async () => {
 			try {
+				const baseUrl = process.env.REACT_APP_API_URL || 'https://api.openweathermap.org';
 				const response = await fetch(
-					`https://api.openweathermap.org/data/2.5/weather?lat=${selectedLocation.lat}&lon=${selectedLocation.lon}&appid=${APIKEY}&units=metric`
+					`${baseUrl}/data/2.5/weather?lat=${selectedLocation.lat}&lon=${selectedLocation.lon}&appid=${APIKEY}&units=metric`
 				);
 				const data = await response.json();
 				setWeatherData(data);
@@ -127,4 +128,3 @@ export const WeatherDisplay = ({ selectedLocation, APIKEY }: WeatherDisplayProps
 		</>
 	);
 };
-
