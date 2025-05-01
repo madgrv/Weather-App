@@ -1,7 +1,8 @@
 // helpers.js
 // Dummy comment to force rebuild - version 2
+import config from './config';
 
-export const APIKEY = process.env.APP_API_KEY;
+export const APIKEY = config.API_KEY;
 
 // function to create a flag emoji from ASCII
 export function getFlagEmoji(countryCode) {

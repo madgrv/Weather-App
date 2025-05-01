@@ -1,0 +1,24 @@
+:root {
+  --background: 0, 0%, 100%;
+  --foreground: 222.2, 84%, 4.9%;
+  --primary: 250, 50%, 50%;
+  --primary-foreground: 45, 29%, 97%;
+  --border: 250, 50%, 50%;
+  --input: 0, 0%, 100%;
+  --ring: 250, 50%, 50%;
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.3125rem;
+  --radius-lg: 0.4375rem;
+  --radius-xl: 0.5625rem;
+}
+
+.dark {
+  --background: 222.2, 84%, 4.9%;
+  --foreground: 210, 40%, 98%;
+  --primary: 250, 50%, 60%;
+  --primary-foreground: 45, 29%, 97%;
+  --border: 250, 50%, 40%;
+  --input: 222.2, 84%, 10%;
+  --ring: 250, 50%, 60%;
+  /* ... update other variables as needed ... */
+}

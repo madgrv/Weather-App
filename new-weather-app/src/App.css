@@ -1,9 +1,9 @@
+/* Custom styles below */
+
 /*  */
 
 html {
 	background-color: hsl(45, 29%, 97%);
-
-	/* font-size: 1em; */
 }
 
 /* CSS reset for browser compatibility */
@@ -32,6 +32,9 @@ body {
 body {
 	line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
+	color: #333;
+	font-size: 1em;
+	font-weight: 600;
 }
 
 /* 6. Improve media defaults */
@@ -67,14 +70,6 @@ h6 {
 #root,
 #__next {
 	isolation: isolate;
-}
-
-/*  */
-
-body {
-	color: #333;
-	font-size: 1em;
-	font-weight: 600;
 }
 
 span {
