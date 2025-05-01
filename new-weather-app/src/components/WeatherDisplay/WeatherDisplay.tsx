@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getFlagEmoji, getTimezoneName, getWeatherIcon } from '../../helpers';
+import { getFlagEmoji, getWeatherIcon } from '../../helpers';
 import { Location, WeatherData } from '../../types';
 import { DateDisplay } from '../DateDisplay';
 import config from '../../config';
@@ -39,7 +39,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
 
   if (!weatherData) {
     return (
-      <div className='text-center p-8 text-slate-600'>
+      <div className='text-center p-8 text-slate-600 dark:text-slate-400'>
         Loading weather data...
       </div>
     );
@@ -47,297 +47,207 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
 
   // Helper function to determine temperature colour
   const getTemperatureColour = (temp: number) => {
-    if (temp < 0) return 'text-blue-600';
-    if (temp < 10) return 'text-blue-400';
-    if (temp < 20) return 'text-green-500';
-    if (temp < 30) return 'text-yellow-500';
-    return 'text-orange-500';
-  };
-
-  // Helper function to get header background colour based on temperature
-  const getHeaderBackgroundColour = (temp: number) => {
-    if (temp < 0) return 'bg-gradient-to-r from-blue-50 to-blue-100';
-    if (temp < 10) return 'bg-gradient-to-r from-cyan-50 to-cyan-100';
-    if (temp < 20) return 'bg-gradient-to-r from-emerald-50 to-emerald-100';
-    if (temp < 30) return 'bg-gradient-to-r from-amber-50 to-amber-100';
-    return 'bg-gradient-to-r from-orange-50 to-orange-100';
-  };
-
-  // Convert timestamp to local time for the city
-  const convertToLocalTime = (timestamp: number) => {
-    const date = new Date(timestamp * 1000);
-    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-    const localDate = new Date(utcDate.getTime() + weatherData.timezone * 1000);
-
-    return localDate.toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  // Get humidity colour
-  const getHumidityColour = (humidity: number) => {
-    if (humidity < 30) return 'bg-yellow-500'; // Dry
-    if (humidity < 60) return 'bg-green-500'; // Comfortable
-    return 'bg-blue-500'; // Humid
+    if (temp < 0) return 'text-blue-600 dark:text-blue-400';
+    if (temp < 10) return 'text-blue-400 dark:text-blue-300';
+    if (temp < 20) return 'text-green-500 dark:text-green-400';
+    if (temp < 30) return 'text-yellow-500 dark:text-yellow-400';
+    return 'text-red-500 dark:text-red-400';
   };
 
   return (
-    <div className='p-6 border-t border-slate-200'>
-      <div className='mb-6 flex flex-col items-center text-center gap-2'>
-        <h2 className='text-xl font-semibold'>
-          Weather for {selectedLocation.name}
-          {selectedLocation.state && `, ${selectedLocation.state}`}
-          {selectedLocation.country &&
-            `, ${selectedLocation.country} ${getFlagEmoji(
-              selectedLocation.country
-            )}`}
-        </h2>
-        <Badge
-          variant='secondary'
-          className='text-lg px-5 py-2.5 mt-2 bg-slate-100 hover:bg-slate-200 text-slate-800 flex items-center gap-2'
-        >
-          <span className='text-2xl mr-1'>
-            {getWeatherIcon(weatherData.weather[0].description)}
-          </span>
-          <span>{weatherData.weather[0].main}</span>
-          <span className='text-sm text-slate-500 ml-1'>
-            ({weatherData.weather[0].description})
-          </span>
-        </Badge>
-      </div>
+    <div className='p-6'>
+      <div className='flex flex-col gap-6'>
+        <div className='flex items-center justify-between'>
+          <h2 className='text-xl font-semibold text-slate-800 dark:text-slate-100'>
+            Weather for {selectedLocation.name}
+          </h2>
+          <Badge variant='outline' className='flex items-center gap-1'>
+            {getFlagEmoji(selectedLocation.country)}{' '}
+            {selectedLocation.state ? `${selectedLocation.state}, ` : ''}
+            {selectedLocation.country}
+          </Badge>
+        </div>
 
-      <div className='grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'>
-        <Card className='transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border-slate-200 overflow-hidden'>
-          <CardHeader
-            className={`pb-2 ${getHeaderBackgroundColour(
-              weatherData.main.temp
-            )} border-b border-slate-200`}
-          >
-            <CardTitle className='text-base flex items-center gap-2'>
-              <span className='text-lg'>🌡️</span> Current Conditions
+        {/* Temperature Card */}
+        <Card className='overflow-hidden border-slate-200 dark:border-slate-700'>
+          <CardHeader className='bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 pb-4'>
+            <CardTitle className='text-lg font-semibold text-slate-800 dark:text-slate-100'>
+              Current Temperature
             </CardTitle>
           </CardHeader>
-          <CardContent className='p-4'>
-            <div className='flex flex-col gap-2'>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Description:</span>
-                <span className='font-medium text-slate-800'>
-                  {weatherData.weather[0].description}
-                </span>
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center gap-4'>
+                <img
+                  src={getWeatherIcon(weatherData.weather[0].icon)}
+                  alt={weatherData.weather[0].description}
+                  className='w-16 h-16'
+                />
+                <div>
+                  <div className='flex items-end gap-2'>
+                    <span
+                      className={`text-4xl font-bold ${getTemperatureColour(
+                        weatherData.main.temp
+                      )}`}
+                    >
+                      {Math.round(weatherData.main.temp)}°C
+                    </span>
+                    <span className='text-sm text-slate-500 dark:text-slate-400 mb-1'>
+                      Feels like {Math.round(weatherData.main.feels_like)}°C
+                    </span>
+                  </div>
+                  <p className='text-slate-600 dark:text-slate-300 capitalize'>
+                    {weatherData.weather[0].description}
+                  </p>
+                </div>
               </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Visibility:</span>
-                <span className='font-medium text-slate-800'>
-                  {weatherData.visibility / 1000} km
-                </span>
-              </div>
-              <div className='mt-3 text-center'>
-                <span className='block text-center text-5xl'>
-                  {getWeatherIcon(weatherData.weather[0].description)}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className='transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border-slate-200 overflow-hidden'>
-          <CardHeader
-            className={`pb-2 ${getHeaderBackgroundColour(
-              weatherData.main.temp
-            )} border-b border-slate-200`}
-          >
-            <CardTitle className='text-base flex items-center gap-2'>
-              <span className='text-lg'>🌡️</span> Temperature
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='p-4'>
-            <div className='flex flex-col gap-2'>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Current:</span>
-                <span
-                  className={`font-bold ${getTemperatureColour(
-                    weatherData.main.temp
-                  )}`}
-                >
-                  {weatherData.main.temp.toFixed(1)}°C
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Feels like:</span>
-                <span
-                  className={`font-medium ${getTemperatureColour(
-                    weatherData.main.feels_like
-                  )}`}
-                >
-                  {weatherData.main.feels_like.toFixed(1)}°C
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Max:</span>
-                <span
-                  className={`font-medium ${getTemperatureColour(
-                    weatherData.main.temp_max
-                  )}`}
-                >
-                  {weatherData.main.temp_max.toFixed(1)}°C
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Min:</span>
-                <span
-                  className={`font-medium ${getTemperatureColour(
-                    weatherData.main.temp_min
-                  )}`}
-                >
-                  {weatherData.main.temp_min.toFixed(1)}°C
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className='transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border-slate-200 overflow-hidden'>
-          <CardHeader
-            className={`pb-2 ${getHeaderBackgroundColour(
-              weatherData.main.temp
-            )} border-b border-slate-200`}
-          >
-            <CardTitle className='text-base flex items-center gap-2'>
-              <span className='text-lg'>🕒</span> Local Time
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='p-4'>
-            <div className='flex flex-col gap-2'>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Current time:</span>
-                <span className='font-medium text-slate-800'>
-                  <DateDisplay UTC={weatherData.timezone} data={weatherData} />
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Timezone:</span>
-                <span className='font-medium text-slate-800'>
-                  UTC {weatherData.timezone > 0 ? '+' : ''}
-                  {(weatherData.timezone / 3600).toFixed(2)}
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Region:</span>
-                <span className='font-medium text-slate-800'>
-                  {getTimezoneName(weatherData.timezone)}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className='transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border-slate-200 overflow-hidden'>
-          <CardHeader
-            className={`pb-2 ${getHeaderBackgroundColour(
-              weatherData.main.temp
-            )} border-b border-slate-200`}
-          >
-            <CardTitle className='text-base flex items-center gap-2'>
-              <span className='text-lg'>🌅</span> Sun Schedule
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='p-4'>
-            <div className='flex flex-col gap-3'>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>
-                  Sunrise (local):
-                </span>
-                <span className='font-medium text-slate-800 flex items-center gap-1'>
-                  <span className='text-amber-500'>☀️</span>
-                  {convertToLocalTime(weatherData.sys.sunrise)}
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>
-                  Sunset (local):
-                </span>
-                <span className='font-medium text-slate-800 flex items-center gap-1'>
-                  <span className='text-indigo-500'>🌙</span>
-                  {convertToLocalTime(weatherData.sys.sunset)}
-                </span>
-              </div>
-              <div className='mt-2 bg-gradient-to-r from-amber-100 via-orange-200 to-indigo-200 h-2 rounded-full'></div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className='transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border-slate-200 overflow-hidden'>
-          <CardHeader
-            className={`pb-2 ${getHeaderBackgroundColour(
-              weatherData.main.temp
-            )} border-b border-slate-200`}
-          >
-            <CardTitle className='text-base flex items-center gap-2'>
-              <span className='text-lg'>💨</span> Atmospheric Conditions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='p-4'>
-            <div className='flex flex-col gap-2'>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Wind:</span>
-                <span className='font-medium text-slate-800'>
-                  {weatherData.wind.speed} m/s
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Pressure:</span>
-                <span className='font-medium text-slate-800'>
-                  {weatherData.main.pressure} hPa
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Humidity:</span>
-                <div className='flex items-center gap-2'>
-                  <span className='font-medium text-slate-800'>
-                    {weatherData.main.humidity}%
-                  </span>
-                  <span
-                    className={`inline-block w-3 h-3 rounded-full ${getHumidityColour(
-                      weatherData.main.humidity
-                    )}`}
-                  ></span>
+              <div className='text-right'>
+                <div className='flex flex-col gap-1'>
+                  <div className='flex items-center justify-end gap-1'>
+                    <span className='text-slate-500 dark:text-slate-400'>
+                      Min:
+                    </span>
+                    <span className='font-semibold text-slate-700 dark:text-slate-300'>
+                      {Math.round(weatherData.main.temp_min)}°C
+                    </span>
+                  </div>
+                  <div className='flex items-center justify-end gap-1'>
+                    <span className='text-slate-500 dark:text-slate-400'>
+                      Max:
+                    </span>
+                    <span className='font-semibold text-slate-700 dark:text-slate-300'>
+                      {Math.round(weatherData.main.temp_max)}°C
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className='transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border-slate-200 overflow-hidden'>
-          <CardHeader
-            className={`pb-2 ${getHeaderBackgroundColour(
-              weatherData.main.temp
-            )} border-b border-slate-200`}
-          >
-            <CardTitle className='text-base flex items-center gap-2'>
-              <span className='text-lg'>📍</span> Location Details
+        {/* Local Time Card */}
+        <Card className='overflow-hidden border-slate-200 dark:border-slate-700'>
+          <CardHeader className='bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 pb-4'>
+            <CardTitle className='text-lg font-semibold text-slate-800 dark:text-slate-100'>
+              Local Time
             </CardTitle>
           </CardHeader>
-          <CardContent className='p-4'>
-            <div className='flex flex-col gap-2'>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Timezone:</span>
-                <span className='font-medium text-slate-800'>
-                  {getTimezoneName(weatherData.timezone)}
+          <CardContent className='p-6'>
+            <DateDisplay UTC={weatherData.timezone} data={weatherData} />
+          </CardContent>
+        </Card>
+
+        {/* Weather Details Card */}
+        <Card className='overflow-hidden border-slate-200 dark:border-slate-700'>
+          <CardHeader className='bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 pb-4'>
+            <CardTitle className='text-lg font-semibold text-slate-800 dark:text-slate-100'>
+              Weather Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className='p-6'>
+            <div className='grid grid-cols-2 gap-4 sm:grid-cols-4'>
+              <div className='flex flex-col'>
+                <span className='text-sm text-slate-500 dark:text-slate-400'>
+                  Humidity
+                </span>
+                <span className='text-lg font-semibold text-slate-700 dark:text-slate-300'>
+                  {weatherData.main.humidity}%
                 </span>
               </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Coordinates:</span>
-                <span className='font-medium text-slate-800'>
-                  {selectedLocation.lat?.toFixed(2) || '0.00'}, {selectedLocation.lon?.toFixed(2) || '0.00'}
+              <div className='flex flex-col'>
+                <span className='text-sm text-slate-500 dark:text-slate-400'>
+                  Pressure
+                </span>
+                <span className='text-lg font-semibold text-slate-700 dark:text-slate-300'>
+                  {weatherData.main.pressure} hPa
                 </span>
               </div>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-slate-600'>Location:</span>
-                <span className='font-medium text-slate-800 flex items-center gap-1'>
-                  {selectedLocation.name}, {selectedLocation.country}{' '}
-                  {getFlagEmoji(selectedLocation.country)}
+              <div className='flex flex-col'>
+                <span className='text-sm text-slate-500 dark:text-slate-400'>
+                  Wind Speed
                 </span>
+                <span className='text-lg font-semibold text-slate-700 dark:text-slate-300'>
+                  {weatherData.wind.speed} m/s
+                </span>
+              </div>
+              <div className='flex flex-col'>
+                <span className='text-sm text-slate-500 dark:text-slate-400'>
+                  Visibility
+                </span>
+                <span className='text-lg font-semibold text-slate-700 dark:text-slate-300'>
+                  {(weatherData.visibility / 1000).toFixed(1)} km
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Sun Schedule Card */}
+        <Card className='overflow-hidden border-slate-200 dark:border-slate-700'>
+          <CardHeader className='bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 pb-4'>
+            <CardTitle className='text-lg font-semibold text-slate-800 dark:text-slate-100'>
+              Sun Schedule
+            </CardTitle>
+          </CardHeader>
+          <CardContent className='p-0'>
+            <div className='grid grid-cols-2'>
+              <div className='p-6 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 flex items-center justify-between'>
+                <div>
+                  <div className='text-sm text-amber-600 dark:text-amber-400'>
+                    Sunrise
+                  </div>
+                  <div className='text-lg font-semibold text-amber-700 dark:text-amber-300'>
+                    {new Date(
+                      (weatherData.sys.sunrise + weatherData.timezone) * 1000
+                    ).toLocaleTimeString('en-GB', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </div>
+                </div>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-8 h-8 text-amber-500 dark:text-amber-400'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z'
+                  />
+                </svg>
+              </div>
+              <div className='p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 flex items-center justify-between'>
+                <div>
+                  <div className='text-sm text-blue-600 dark:text-blue-400'>
+                    Sunset
+                  </div>
+                  <div className='text-lg font-semibold text-blue-700 dark:text-blue-300'>
+                    {new Date(
+                      (weatherData.sys.sunset + weatherData.timezone) * 1000
+                    ).toLocaleTimeString('en-GB', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </div>
+                </div>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-8 h-8 text-blue-500 dark:text-blue-400'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z'
+                  />
+                </svg>
               </div>
             </div>
           </CardContent>

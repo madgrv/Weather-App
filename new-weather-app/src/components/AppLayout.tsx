@@ -6,6 +6,7 @@ import { Location } from '../types';
 import { getLocation } from '../api/getLocation';
 import config from '../config';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import { ThemeToggle } from './ui/theme-toggle';
 
 export const AppLayout = () => {
   const [userInput, setUserInput] = useState('');
@@ -33,28 +34,28 @@ export const AppLayout = () => {
   };
 
   return (
-    <div className='min-h-screen bg-slate-50 p-4 sm:p-6 flex flex-col items-center'>
-      <Card className='w-full min-w-[30rem] max-w-[85rem] overflow-hidden border-slate-200 shadow-md'>
-        <CardHeader className='bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 pb-4'>
+    <div className='min-h-screen bg-slate-50 dark:bg-slate-900 p-4 sm:p-6 flex flex-col items-center'>
+      <Card className='w-full min-w-[30rem] max-w-[85rem] overflow-hidden border-slate-200 dark:border-slate-700 shadow-md'>
+        <CardHeader className='bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 pb-4'>
           <div className='flex flex-col gap-4'>
-            {/* Top row with title and clock */}
             <div className='flex justify-between items-center'>
-              <CardTitle className='text-2xl font-bold text-slate-800 whitespace-nowrap'>
+              <CardTitle className='text-2xl font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap'>
                 WeatherUp!
               </CardTitle>
 
-              <div className='flex items-center gap-2 whitespace-nowrap'>
-                <span className='text-sm font-medium text-slate-600'>
+              <div className='flex items-center gap-4 whitespace-nowrap'>
+                <span className='text-sm font-medium text-slate-600 dark:text-slate-400'>
                   World Weather
                 </span>
-                <span className='text-slate-400 mx-1'>|</span>
-                <div className='text-sm text-slate-600'>
-                  <DateDisplay />
+                <div className='flex items-center gap-2'>
+                  <div className='text-sm text-slate-600 dark:text-slate-400'>
+                    <DateDisplay />
+                  </div>
+                  <ThemeToggle />
                 </div>
               </div>
             </div>
 
-            {/* Search bar centered below */}
             <div className='w-full max-w-2xl flex mx-auto'>
               <SearchInputEnhanced
                 userInput={userInput}
@@ -74,7 +75,7 @@ export const AppLayout = () => {
               <div className='mb-4'>
                 <span className="font-bold text-xl text-primary">Welcome to WeatherUp! 🌤️</span>
               </div>
-              <p className="text-base text-slate-700">
+              <p className="text-base text-slate-700 dark:text-slate-300">
                 Enter a city name to check the weather and stay informed about
                 current conditions. Get started by typing in the search box
                 above. Happy exploring!
