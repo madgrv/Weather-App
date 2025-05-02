@@ -29,7 +29,7 @@
   --card-foreground: hsl(210, 20%, 98%);
   --popover: hsl(224, 40%, 16%);
   --popover-foreground: hsl(210, 20%, 98%);
-  --primary: hsl(250, 50%, 60%);
+  --primary: hsl(250, 50%, 75%);
   --primary-foreground: hsl(45, 29%, 97%);
   --muted: hsl(215, 27%, 20%);
   --muted-foreground: hsl(217, 10%, 70%);
@@ -39,5 +39,5 @@
   --destructive-foreground: hsl(210, 20%, 98%);
   --border: hsl(215, 27%, 25%);
   --input: hsl(215, 27%, 20%);
-  --ring: hsl(250, 50%, 60%);
+  --ring: hsl(250, 50%, 75%);
 }

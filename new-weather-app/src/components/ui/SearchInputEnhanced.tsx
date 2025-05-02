@@ -233,10 +233,10 @@ export const SearchInputEnhanced = ({
                   aria-selected={focusedIndex === index}
                   tabIndex={-1}
                 >
-                  <span className='text-lg' aria-hidden='true'>
+                  <span className='text-base' aria-hidden='true'>
                     {getCountryFlag(location.country || '')}
                   </span>
-                  <span>
+                  <span className={`text-[0.9375rem]`}>
                     {location.name}, {location.country}
                   </span>
                 </div>

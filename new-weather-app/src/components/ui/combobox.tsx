@@ -24,8 +24,8 @@ const ComboboxInput = React.forwardRef<
   <CommandPrimitive.Input
     ref={ref}
     className={cn(
-      "h-[3em] w-full px-4 border-2 rounded-sm",
-      "border-primary focus:outline-none focus:ring-2 focus:ring-primary/50",
+      'h-[3em] w-full px-4 border-2 rounded-sm',
+      'border-primary focus:outline-none focus:ring-2 focus:ring-primary/50',
       className
     )}
     {...props}
@@ -40,9 +40,9 @@ const ComboboxList = React.forwardRef<
   <CommandPrimitive.List
     ref={ref}
     className={cn(
-      "absolute z-50 mt-1 max-h-96 w-full overflow-auto rounded-md",
-      "border bg-popover p-1 shadow-md",
-      "animate-in fade-in-0 zoom-in-95",
+      'absolute z-50 mt-1 max-h-96 w-full overflow-auto rounded-md',
+      'border bg-popover p-1 shadow-md',
+      'animate-in fade-in-0 zoom-in-95',
       className
     )}
     {...props}
