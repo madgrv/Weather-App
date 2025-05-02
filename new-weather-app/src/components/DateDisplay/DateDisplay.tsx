@@ -47,13 +47,13 @@ export const DateDisplay = ({ UTC }: DateDisplayProps) => {
 	return (
 		<>
 			{UTC ? (
-				<DateWrapper>
-					<Info>Local time</Info>
+				<DateWrapper className="text-foreground">
+					<Info className="text-muted-foreground">Local time</Info>
 					<h6>{date}</h6>
 					<h6>{time}</h6>
 				</DateWrapper>
 			) : (
-				<DateWrapper>
+				<DateWrapper className="text-foreground">
 					{date} {time}
 				</DateWrapper>
 			)}

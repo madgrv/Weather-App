@@ -34,21 +34,21 @@ export const AppLayout = () => {
   };
 
   return (
-    <div className='min-h-screen bg-slate-50 dark:bg-slate-900 p-4 sm:p-6 flex flex-col items-center'>
-      <Card className='w-full min-w-[30rem] max-w-[85rem] overflow-hidden border-slate-200 dark:border-slate-700 shadow-md'>
-        <CardHeader className='bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 pb-4'>
+    <div className='min-h-screen bg-background p-4 sm:p-6 flex flex-col items-center'>
+      <Card className='w-full min-w-[30rem] max-w-[85rem] overflow-hidden border-border shadow-md'>
+        <CardHeader className='bg-card border-b border-border pb-4'>
           <div className='flex flex-col gap-4'>
             <div className='flex justify-between items-center'>
-              <CardTitle className='text-2xl font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap'>
+              <CardTitle className='text-2xl font-bold text-primary whitespace-nowrap px-2'>
                 WeatherUp!
               </CardTitle>
 
               <div className='flex items-center gap-4 whitespace-nowrap'>
-                <span className='text-sm font-medium text-slate-600 dark:text-slate-400'>
+                <span className='text-sm font-medium text-muted-foreground'>
                   World Weather
                 </span>
                 <div className='flex items-center gap-2'>
-                  <div className='text-sm text-slate-600 dark:text-slate-400'>
+                  <div className='text-sm text-muted-foreground'>
                     <DateDisplay />
                   </div>
                   <ThemeToggle />
@@ -73,9 +73,11 @@ export const AppLayout = () => {
           ) : (
             <div className='p-6 text-center flex flex-col items-center gap-4'>
               <div className='mb-4'>
-                <span className="font-bold text-xl text-primary">Welcome to WeatherUp! 🌤️</span>
+                <span className="font-bold text-xl text-primary px-2">
+                  Welcome to WeatherUp! 🌤️
+                </span>
               </div>
-              <p className="text-base text-slate-700 dark:text-slate-300">
+              <p className="text-base text-foreground">
                 Enter a city name to check the weather and stay informed about
                 current conditions. Get started by typing in the search box
                 above. Happy exploring!

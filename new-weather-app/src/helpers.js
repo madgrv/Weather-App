@@ -37,8 +37,14 @@ export function getTimezoneName(timezoneOffset) {
   return offsetString;
 }
 
-// Function to get weather icon based on weather description
-export function getWeatherIcon(weatherDescription) {
+// Function to get weather icon based on weather description or icon code
+export function getWeatherIcon(iconOrDescription) {
+  // If it's an icon code from the API (e.g., "01d", "02n", etc.)
+  if (typeof iconOrDescription === 'string' && iconOrDescription.length <= 3) {
+    return `https://openweathermap.org/img/wn/${iconOrDescription}@2x.png`;
+  }
+
+  // If it's a weather description, use emoji mapping
   const weatherIcons = {
     Clear: '☀️',
     Clouds: '☁️',
@@ -46,11 +52,17 @@ export function getWeatherIcon(weatherDescription) {
     Thunderstorm: '⛈️',
     Drizzle: '🌦️',
     Snow: '❄️',
+    Mist: '🌫️',
+    Fog: '🌫️',
+    Haze: '🌫️',
+    Dust: '🌫️',
+    Smoke: '🌫️',
+    Tornado: '🌪️',
   };
 
   const condition = Object.keys(weatherIcons).find((key) =>
-    weatherDescription.toLowerCase().includes(key.toLowerCase())
+    iconOrDescription.toLowerCase().includes(key.toLowerCase())
   );
 
-  return weatherIcons[condition] || '';
+  return weatherIcons[condition] || '🌡️'; // Default to thermometer if no match
 }
