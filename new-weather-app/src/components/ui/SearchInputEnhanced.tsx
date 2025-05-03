@@ -10,6 +10,7 @@ import { Button } from './button';
 import { Input } from './input';
 import { Card, CardContent } from './card';
 import { cn } from '../../lib/utils';
+import language from '../../lib/language';
 
 type SearchInputEnhancedProps = {
   userInput: string;
@@ -177,7 +178,7 @@ export const SearchInputEnhanced = ({
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={handleInputKeyDown}
           onFocus={() => locations.length > 0 && setIsOpen(true)}
-          placeholder='Enter city name'
+          placeholder={language.searchPlaceholder}
           className='flex-1 border-2 border-primary rounded-sm focus-visible:ring-2 focus-visible:ring-primary/50'
           aria-autocomplete='list'
           aria-controls={
@@ -193,7 +194,7 @@ export const SearchInputEnhanced = ({
           type='submit'
           className='bg-primary text-primary-foreground h-[2.9em] px-6 rounded-sm hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary/50'
         >
-          Search
+          {language.searchButton}
         </Button>
       </form>
 
