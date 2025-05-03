@@ -87,14 +87,14 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
         </div>
 
         {/* Temperature Card - Full width on all screens */}
-        <Card className='overflow-hidden border-border'>
+        <Card className='@container overflow-hidden border-border'>
           <CardHeader className='bg-card border-b border-border pb-4'>
             <CardTitle className='text-lg font-semibold text-card-foreground'>
               {language.currentTemperature}
             </CardTitle>
           </CardHeader>
           <CardContent className='p-6'>
-            <div className='flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-4 sm:gap-0'>
+            <div className='flex flex-col @md:flex-row items-start @md:items-center @md:justify-between gap-4 @md:gap-0'>
               <div className='flex items-center gap-4'>
                 {weatherData.weather[0].icon && (
                   <img
@@ -121,15 +121,15 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                   </p>
                 </div>
               </div>
-              <div className='text-left sm:text-right mt-2 sm:mt-0'>
+              <div className='text-left @md:text-right mt-2 @md:mt-0'>
                 <div className='flex flex-col gap-1'>
-                  <div className='flex items-center justify-start sm:justify-end gap-1'>
+                  <div className='flex items-center justify-start @md:justify-end gap-1'>
                     <span className='text-muted-foreground'>{language.min}</span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_min)}°C
                     </span>
                   </div>
-                  <div className='flex items-center justify-start sm:justify-end gap-1'>
+                  <div className='flex items-center justify-start @md:justify-end gap-1'>
                     <span className='text-muted-foreground'>{language.max}</span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_max)}°C
@@ -142,9 +142,9 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
         </Card>
 
         {/* Two column grid for the remaining cards on larger screens */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6'>
+        <div className='grid grid-cols-1 @md:grid-cols-2 gap-4 @sm:gap-6'>
           {/* Local Time Card */}
-          <Card className='overflow-hidden border-border'>
+          <Card className='@container overflow-hidden border-border'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
                 {language.localTime}
@@ -156,43 +156,43 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
           </Card>
 
           {/* Weather Details Card */}
-          <Card className='overflow-hidden border-border'>
+          <Card className='@container overflow-hidden border-border @md:col-span-2'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
                 {language.weatherDetails}
               </CardTitle>
             </CardHeader>
             <CardContent className='p-6'>
-              <div className='grid grid-cols-2 gap-4 sm:grid-cols-2'>
-                <div className='flex flex-col'>
+              <div className='grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-4 gap-4'>
+                <div className='flex flex-col p-4 bg-card rounded-md border border-border'>
                   <span className='text-sm text-muted-foreground'>
                     {language.humidity}
                   </span>
-                  <span className='text-lg font-semibold text-foreground'>
+                  <span className='text-2xl font-semibold text-foreground mt-1'>
                     {weatherData.main.humidity}%
                   </span>
                 </div>
-                <div className='flex flex-col'>
+                <div className='flex flex-col p-4 bg-card rounded-md border border-border'>
                   <span className='text-sm text-muted-foreground'>
                     {language.pressure}
                   </span>
-                  <span className='text-lg font-semibold text-foreground'>
+                  <span className='text-2xl font-semibold text-foreground mt-1'>
                     {weatherData.main.pressure} hPa
                   </span>
                 </div>
-                <div className='flex flex-col'>
+                <div className='flex flex-col p-4 bg-card rounded-md border border-border'>
                   <span className='text-sm text-muted-foreground'>
                     {language.windSpeed}
                   </span>
-                  <span className='text-lg font-semibold text-foreground'>
+                  <span className='text-2xl font-semibold text-foreground mt-1'>
                     {weatherData.wind.speed} m/s
                   </span>
                 </div>
-                <div className='flex flex-col'>
+                <div className='flex flex-col p-4 bg-card rounded-md border border-border'>
                   <span className='text-sm text-muted-foreground'>
                     {language.visibility}
                   </span>
-                  <span className='text-lg font-semibold text-foreground'>
+                  <span className='text-2xl font-semibold text-foreground mt-1'>
                     {(weatherData.visibility / 1000).toFixed(1)} km
                   </span>
                 </div>
@@ -200,21 +200,21 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
             </CardContent>
           </Card>
 
-          {/* Sun Schedule Card - Full width on small screens, half width on larger screens */}
-          <Card className='overflow-hidden border-border md:col-span-2'>
+          {/* Sun Schedule Card */}
+          <Card className='@container overflow-hidden border-border @md:col-span-2'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
                 {language.sunSchedule}
               </CardTitle>
             </CardHeader>
             <CardContent className='p-0'>
-              <div className='grid grid-cols-1 sm:grid-cols-2'>
-                <div className='p-4 sm:p-6 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 flex items-center justify-between'>
+              <div className='grid grid-cols-1 @sm:grid-cols-2'>
+                <div className='p-4 @sm:p-6 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 flex items-center justify-between'>
                   <div>
                     <div className='text-sm text-amber-600 dark:text-amber-400'>
                       {language.sunrise}
                     </div>
-                    <div className='text-base sm:text-lg font-semibold text-amber-700 dark:text-amber-300'>
+                    <div className='text-base @sm:text-lg font-semibold text-amber-700 dark:text-amber-300'>
                       {new Date(
                         (weatherData.sys.sunrise + weatherData.timezone) * 1000
                       ).toLocaleTimeString('en-GB', {
@@ -230,7 +230,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                       viewBox='0 0 24 24'
                       strokeWidth={1.5}
                       stroke='currentColor'
-                      className='w-8 h-8 sm:w-10 sm:h-10'
+                      className='w-8 h-8 @sm:w-10 @sm:h-10'
                     >
                       <path
                         strokeLinecap='round'
@@ -240,12 +240,12 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                     </svg>
                   </div>
                 </div>
-                <div className='p-4 sm:p-6 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 flex items-center justify-between'>
+                <div className='p-4 @sm:p-6 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 flex items-center justify-between'>
                   <div>
                     <div className='text-sm text-indigo-600 dark:text-indigo-400'>
                       {language.sunset}
                     </div>
-                    <div className='text-base sm:text-lg font-semibold text-indigo-700 dark:text-indigo-300'>
+                    <div className='text-base @sm:text-lg font-semibold text-indigo-700 dark:text-indigo-300'>
                       {new Date(
                         (weatherData.sys.sunset + weatherData.timezone) * 1000
                       ).toLocaleTimeString('en-GB', {
@@ -261,7 +261,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                       viewBox='0 0 24 24'
                       strokeWidth={1.5}
                       stroke='currentColor'
-                      className='w-8 h-8 sm:w-10 sm:h-10'
+                      className='w-8 h-8 @sm:w-10 @sm:h-10'
                     >
                       <path
                         strokeLinecap='round'

@@ -45,6 +45,12 @@ module.exports = {
         lg: '0 8px 16px var(--tw-shadow-color)',
         'white-border': '1px 0 0 rgba(240, 240, 245, 0.7), -1px 0 0 rgba(240, 240, 245, 0.7), 0 1px 0 rgba(240, 240, 245, 0.7), 0 -1px 0 rgba(240, 240, 245, 0.7)',
       },
+      containerQueries: {
+        sm: '480px',
+        md: '768px',
+        lg: '976px',
+        xl: '1440px',
+      },
     }
   },
   plugins: [
@@ -58,5 +64,6 @@ module.exports = {
         { values: theme('textShadow') }
       )
     },
+    require('@tailwindcss/container-queries'),
   ],
 }
