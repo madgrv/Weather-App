@@ -7,6 +7,7 @@ import { getLocation } from '../api/getLocation';
 import config from '../config';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { ThemeToggle } from './ui/theme-toggle';
+import language from '../lib/language/en';
 
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
@@ -59,11 +60,11 @@ export const AppLayout = () => {
             <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center'>
               <div className='flex items-center gap-2'>
                 <CardTitle className='text-2xl font-bold text-primary whitespace-nowrap px-3'>
-                  WeatherUp!
+                  {language.app.title}
                 </CardTitle>
                 {!isMobile ? (
                   <span className='text-sm font-medium text-muted-foreground'>
-                    World Weather
+                    {language.app.subtitle}
                   </span>
                 ) : null}
                 {isMobile ? <ThemeToggle /> : null}
@@ -73,7 +74,7 @@ export const AppLayout = () => {
                 <div className='flex items-center gap-2'>
                   {isMobile ? (
                     <span className='text-sm font-medium text-muted-foreground'>
-                      World Weather
+                      {language.app.subtitle}
                     </span>
                   ) : null}
                   <div className='text-sm text-muted-foreground'>
@@ -103,13 +104,11 @@ export const AppLayout = () => {
             <div className='p-6 text-center flex flex-col items-center gap-4'>
               <div className='mb-4'>
                 <span className='font-bold text-xl text-primary px-2'>
-                  Welcome to WeatherUp! 🌤️
+                  {language.app.welcome}
                 </span>
               </div>
               <p className='text-base text-foreground'>
-                Enter a city name to check the weather and stay informed about
-                current conditions. Get started by typing in the search box
-                above. Happy exploring!
+                {language.app.instructions}
               </p>
             </div>
           )}

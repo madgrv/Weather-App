@@ -10,6 +10,7 @@ import { Button } from './button';
 import { Input } from './input';
 import { Card, CardContent } from './card';
 import { cn } from '../../lib/utils';
+import language from '../../lib/language';
 
 type SearchInputProps = {
   userInput: string;
@@ -147,7 +148,8 @@ export const SearchInput = ({
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={handleInputKeyDown}
           onFocus={() => locations.length > 0 && setIsOpen(true)}
-          placeholder='Enter city name'
+          placeholder={language.search.placeholder}
+          aria-label={language.search.ariaLabel}
           className='flex-1 border-2 border-primary rounded-sm focus-visible:ring-2 focus-visible:ring-primary/50'
           aria-autocomplete='list'
           aria-controls={isOpen && locations.length > 0 ? 'location-results' : ''}
@@ -155,8 +157,12 @@ export const SearchInput = ({
             isOpen && focusedIndex >= 0 ? `location-option-${focusedIndex}` : ''
           }
         />
-        <Button type='submit' className='ml-2'>
-          Search
+        <Button
+          type='submit'
+          className='ml-2'
+          aria-label={language.search.button}
+        >
+          {language.search.button}
         </Button>
       </form>
       {isOpen && locations.length > 0 && (
@@ -171,10 +177,12 @@ export const SearchInput = ({
               <div
                 key={location.lat + '-' + location.lon}
                 id={`location-option-${idx}`}
-                ref={el => (itemRefs.current[idx] = el)}
+                ref={(el) => (itemRefs.current[idx] = el)}
                 className={cn(
                   'flex items-center px-2 py-1 cursor-pointer rounded-sm',
-                  idx === focusedIndex ? 'bg-primary text-primary-foreground' : 'hover:bg-accent',
+                  idx === focusedIndex
+                    ? 'bg-primary text-primary-foreground'
+                    : 'hover:bg-accent',
                 )}
                 onClick={() => {
                   handleLocationSelect(location);
@@ -186,11 +194,19 @@ export const SearchInput = ({
                 aria-selected={idx === focusedIndex}
               >
                 <span className='mr-2'>{getCountryFlag(location.country ?? '')}</span>
-                <span>{location.name}, {location.state ? `${location.state}, ` : ''}{location.country}</span>
+                <span>
+                  {location.name}, {location.state ? `${location.state}, ` : ''}
+                  {location.country}
+                </span>
               </div>
             ))}
           </CardContent>
         </Card>
+      )}
+      {isOpen && locations.length === 0 && (
+        <div className='p-2 text-muted-foreground text-sm'>
+          {language.search.noResults}
+        </div>
       )}
     </div>
   );

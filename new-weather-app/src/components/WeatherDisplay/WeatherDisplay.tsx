@@ -5,6 +5,7 @@ import { DateDisplay } from '../DateDisplay';
 import config from '../../config';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
+import language from '../../lib/language';
 
 type WeatherDisplayProps = {
   selectedLocation: Location;
@@ -37,7 +38,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
   if (!weatherData) {
     return (
       <div className='text-center p-8 text-muted-foreground'>
-        Loading weather data...
+        {language.weather.loading}
       </div>
     );
   }
@@ -63,7 +64,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
               />
             )}
             <h2 className='text-xl font-semibold text-foreground'>
-              Weather for{' '}
+              {language.weather.cardTitle}{' '}
               <span className='text-primary font-bold'>
                 {selectedLocation.name}
               </span>
@@ -83,7 +84,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
         <Card className='overflow-hidden border-border'>
           <CardHeader className='bg-card border-b border-border pb-4'>
             <CardTitle className='text-lg font-semibold text-card-foreground'>
-              Current Temperature
+              {language.weather.currentTemp}
             </CardTitle>
           </CardHeader>
           <CardContent className='p-4 sm:p-6'>
@@ -106,7 +107,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                       {Math.round(weatherData.main.temp)}°C
                     </span>
                     <span className='text-xs sm:text-sm text-muted-foreground mb-1'>
-                      Feels like {Math.round(weatherData.main.feels_like)}°C
+                      {language.weather.feelsLike} {Math.round(weatherData.main.feels_like)}°C
                     </span>
                   </div>
                   <p className='text-sm sm:text-base text-foreground capitalize'>
@@ -117,13 +118,13 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
               <div className='text-left sm:text-right'>
                 <div className='flex flex-row sm:flex-col gap-2 sm:gap-1'>
                   <div className='flex items-center gap-1 justify-start sm:justify-end'>
-                    <span className='text-xs sm:text-sm text-muted-foreground'>Min:</span>
+                    <span className='text-xs sm:text-sm text-muted-foreground'>{language.weather.min}</span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_min)}°C
                     </span>
                   </div>
                   <div className='flex items-center gap-1 justify-start sm:justify-end'>
-                    <span className='text-xs sm:text-sm text-muted-foreground'>Max:</span>
+                    <span className='text-xs sm:text-sm text-muted-foreground'>{language.weather.max}</span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_max)}°C
                     </span>
@@ -137,7 +138,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
           <Card className='overflow-hidden border-border'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
-                Local Time
+                {language.weather.localTime}
               </CardTitle>
             </CardHeader>
             <CardContent className='p-6'>
@@ -147,14 +148,14 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
           <Card className='overflow-hidden border-border'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
-                Weather Details
+                {language.weather.details}
               </CardTitle>
             </CardHeader>
             <CardContent className='p-6'>
               <div className='grid grid-cols-2 gap-4 sm:grid-cols-2'>
                 <div className='flex flex-col'>
                   <span className='text-sm text-muted-foreground'>
-                    Humidity
+                    {language.weather.humidity}
                   </span>
                   <span className='text-lg font-semibold text-foreground'>
                     {weatherData.main.humidity}%
@@ -162,7 +163,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 </div>
                 <div className='flex flex-col'>
                   <span className='text-sm text-muted-foreground'>
-                    Pressure
+                    {language.weather.pressure}
                   </span>
                   <span className='text-lg font-semibold text-foreground'>
                     {weatherData.main.pressure} hPa
@@ -170,7 +171,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 </div>
                 <div className='flex flex-col'>
                   <span className='text-sm text-muted-foreground'>
-                    Wind Speed
+                    {language.weather.windSpeed}
                   </span>
                   <span className='text-lg font-semibold text-foreground'>
                     {weatherData.wind.speed} m/s
@@ -178,7 +179,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 </div>
                 <div className='flex flex-col'>
                   <span className='text-sm text-muted-foreground'>
-                    Visibility
+                    {language.weather.visibility}
                   </span>
                   <span className='text-lg font-semibold text-foreground'>
                     {(weatherData.visibility / 1000).toFixed(1)} km
