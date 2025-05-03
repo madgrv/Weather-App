@@ -5,6 +5,7 @@ import { DateDisplay } from '../DateDisplay';
 import config from '../../config';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
+import language from '../../lib/language';
 
 type WeatherDisplayProps = {
   selectedLocation: Location;
@@ -40,7 +41,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
   if (!weatherData) {
     return (
       <div className='text-center p-8 text-muted-foreground'>
-        Loading weather data...
+        {language.loading}
       </div>
     );
   }
@@ -89,7 +90,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
         <Card className='overflow-hidden border-border'>
           <CardHeader className='bg-card border-b border-border pb-4'>
             <CardTitle className='text-lg font-semibold text-card-foreground'>
-              Current Temperature
+              {language.currentTemperature}
             </CardTitle>
           </CardHeader>
           <CardContent className='p-6'>
@@ -112,7 +113,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                       {Math.round(weatherData.main.temp)}°C
                     </span>
                     <span className='text-sm text-muted-foreground mb-1'>
-                      Feels like {Math.round(weatherData.main.feels_like)}°C
+                      {language.feelsLike} {Math.round(weatherData.main.feels_like)}°C
                     </span>
                   </div>
                   <p className='text-foreground capitalize'>
@@ -123,13 +124,13 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
               <div className='text-left sm:text-right mt-2 sm:mt-0'>
                 <div className='flex flex-col gap-1'>
                   <div className='flex items-center justify-start sm:justify-end gap-1'>
-                    <span className='text-muted-foreground'>Min:</span>
+                    <span className='text-muted-foreground'>{language.min}</span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_min)}°C
                     </span>
                   </div>
                   <div className='flex items-center justify-start sm:justify-end gap-1'>
-                    <span className='text-muted-foreground'>Max:</span>
+                    <span className='text-muted-foreground'>{language.max}</span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_max)}°C
                     </span>
@@ -146,7 +147,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
           <Card className='overflow-hidden border-border'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
-                Local Time
+                {language.localTime}
               </CardTitle>
             </CardHeader>
             <CardContent className='p-6'>
@@ -158,14 +159,14 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
           <Card className='overflow-hidden border-border'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
-                Weather Details
+                {language.weatherDetails}
               </CardTitle>
             </CardHeader>
             <CardContent className='p-6'>
               <div className='grid grid-cols-2 gap-4 sm:grid-cols-2'>
                 <div className='flex flex-col'>
                   <span className='text-sm text-muted-foreground'>
-                    Humidity
+                    {language.humidity}
                   </span>
                   <span className='text-lg font-semibold text-foreground'>
                     {weatherData.main.humidity}%
@@ -173,7 +174,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 </div>
                 <div className='flex flex-col'>
                   <span className='text-sm text-muted-foreground'>
-                    Pressure
+                    {language.pressure}
                   </span>
                   <span className='text-lg font-semibold text-foreground'>
                     {weatherData.main.pressure} hPa
@@ -181,7 +182,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 </div>
                 <div className='flex flex-col'>
                   <span className='text-sm text-muted-foreground'>
-                    Wind Speed
+                    {language.windSpeed}
                   </span>
                   <span className='text-lg font-semibold text-foreground'>
                     {weatherData.wind.speed} m/s
@@ -189,7 +190,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 </div>
                 <div className='flex flex-col'>
                   <span className='text-sm text-muted-foreground'>
-                    Visibility
+                    {language.visibility}
                   </span>
                   <span className='text-lg font-semibold text-foreground'>
                     {(weatherData.visibility / 1000).toFixed(1)} km
@@ -203,7 +204,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
           <Card className='overflow-hidden border-border md:col-span-2'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
-                Sun Schedule
+                {language.sunSchedule}
               </CardTitle>
             </CardHeader>
             <CardContent className='p-0'>
@@ -211,7 +212,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 <div className='p-4 sm:p-6 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 flex items-center justify-between'>
                   <div>
                     <div className='text-sm text-amber-600 dark:text-amber-400'>
-                      Sunrise
+                      {language.sunrise}
                     </div>
                     <div className='text-base sm:text-lg font-semibold text-amber-700 dark:text-amber-300'>
                       {new Date(
@@ -242,7 +243,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 <div className='p-4 sm:p-6 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 flex items-center justify-between'>
                   <div>
                     <div className='text-sm text-indigo-600 dark:text-indigo-400'>
-                      Sunset
+                      {language.sunset}
                     </div>
                     <div className='text-base sm:text-lg font-semibold text-indigo-700 dark:text-indigo-300'>
                       {new Date(

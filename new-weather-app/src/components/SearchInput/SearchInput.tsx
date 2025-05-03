@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Card } from '../ui/card';
 import { Location, Selection } from '../../types';
+import language from '../../lib/language';
 
 type SearchInputProps = {
   userInput: string;
@@ -34,12 +35,12 @@ export const SearchInput = ({
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Enter city name"
+          placeholder={language.searchPlaceholder}
           required
           className="h-[3em] w-full rounded-md border-2 border-primary focus:ring-2 focus:ring-primary/50"
         />
         <Button type="submit" className="h-[3em] w-full sm:w-auto px-6 rounded-md font-bold text-base">
-          Search
+          {language.searchButton}
         </Button>
       </form>
       {locations.length > 0 && (
