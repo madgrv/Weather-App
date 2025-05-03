@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DateDisplay } from './DateDisplay';
-import SearchInputEnhanced from './ui/SearchInputEnhanced';
+import SearchInput from './ui/SearchInput';
 import { WeatherDisplay } from './WeatherDisplay';
 import { Location } from '../types';
 import { getLocation } from '../api/getLocation';
@@ -8,12 +8,30 @@ import config from '../config';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { ThemeToggle } from './ui/theme-toggle';
 
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
+  }, [matches, query]);
+
+  return matches;
+}
+
 export const AppLayout = () => {
   const [userInput, setUserInput] = useState('');
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null
   );
+
+  const isMobile = useMediaQuery('(max-width: 639px)');
 
   const handleSearch = async () => {
     const apiKey = config.API_KEY;
@@ -35,34 +53,45 @@ export const AppLayout = () => {
 
   return (
     <div className='min-h-screen bg-background p-4 sm:p-6 flex flex-col items-center'>
-      <Card className='w-full min-w-[30rem] max-w-[85rem] overflow-hidden border-border shadow-md'>
+      <Card className='w-full max-w-screen-sm sm:min-w-[30rem] sm:max-w-[85rem] overflow-hidden border-border shadow-md'>
         <CardHeader className='bg-card border-b border-border pb-4'>
           <div className='flex flex-col gap-4'>
-            <div className='flex justify-between items-center'>
-              <CardTitle className='text-2xl font-bold text-primary whitespace-nowrap px-2'>
-                WeatherUp!
-              </CardTitle>
+            <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center'>
+              <div className='flex items-center gap-2'>
+                <CardTitle className='text-2xl font-bold text-primary whitespace-nowrap px-3'>
+                  WeatherUp!
+                </CardTitle>
+                {!isMobile ? (
+                  <span className='text-sm font-medium text-muted-foreground'>
+                    World Weather
+                  </span>
+                ) : null}
+                {isMobile ? <ThemeToggle /> : null}
+              </div>
 
-              <div className='flex items-center gap-4 whitespace-nowrap'>
-                <span className='text-sm font-medium text-muted-foreground'>
-                  World Weather
-                </span>
+              <div className='flex items-center gap-4 whitespace-nowrap mt-2 sm:mt-0 p-3'>
                 <div className='flex items-center gap-2'>
+                  {isMobile ? (
+                    <span className='text-sm font-medium text-muted-foreground'>
+                      World Weather
+                    </span>
+                  ) : null}
                   <div className='text-sm text-muted-foreground'>
                     <DateDisplay />
                   </div>
-                  <ThemeToggle />
+                  {isMobile ? null : <ThemeToggle />}
                 </div>
               </div>
             </div>
 
-            <div className='w-full max-w-2xl flex mx-auto'>
-              <SearchInputEnhanced
+            <div className='w-full max-w-full sm:max-w-2xl flex mx-auto'>
+              <SearchInput
                 userInput={userInput}
                 setUserInput={setUserInput}
                 locations={locations}
                 handleSearch={handleSearch}
                 handleLocationSelect={handleLocationSelect}
+                className='w-full sm:w-[28rem] md:w-[32rem] lg:w-[36rem] xl:w-[40rem]'
               />
             </div>
           </div>
@@ -73,11 +102,11 @@ export const AppLayout = () => {
           ) : (
             <div className='p-6 text-center flex flex-col items-center gap-4'>
               <div className='mb-4'>
-                <span className="font-bold text-xl text-primary px-2">
+                <span className='font-bold text-xl text-primary px-2'>
                   Welcome to WeatherUp! 🌤️
                 </span>
               </div>
-              <p className="text-base text-foreground">
+              <p className='text-base text-foreground'>
                 Enter a city name to check the weather and stay informed about
                 current conditions. Get started by typing in the search box
                 above. Happy exploring!
