@@ -21,14 +21,14 @@ const languageMap: Record<string, any> = {
  * If the user's language is not present in the language map, it falls back to English.
  */
 function detectUserLanguage(): string {
-  //   if (typeof navigator !== 'undefined' && navigator.language) {
-  //     // Extract the language code from the navigator.language string (e.g., 'en-US' -> 'en')
-  //     const lang = navigator.language.split('-')[0];
-  //     // Return the language code if it exists in the language map, otherwise fall back to English
-  //     return languageMap[lang] ? lang : 'en';
-  //   }
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    // Extract the language code from the navigator.language string (e.g., 'en-US' -> 'en')
+    const lang = navigator.language.split('-')[0];
+    // Return the language code if it exists in the language map, otherwise fall back to English
+    return languageMap[lang] ? lang : 'en';
+  }
   // If navigator.language is not available, fall back to English
-  return 'fr';
+  return 'en';
 }
 
 // Detect the user's language
