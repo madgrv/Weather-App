@@ -6,11 +6,12 @@ const it = {
   localTime: 'Ora locale',
   
   // Welcome message
-  welcomeTitle: 'Benvenuto su WeatherUp! 🌤️',
-  welcomeMessage: 'Inserisci il nome di una città per controllare il meteo e rimanere informato sulle condizioni attuali. Inizia digitando nella casella di ricerca qui sopra. Buona esplorazione!',
+  welcomeTitle: 'Benvenuto in WeatherUp! 🌤️',
+  welcomeMessage: 'Inserisci il nome di una città per controllare il meteo e rimanere informato sulle condizioni attuali. Inizia a digitare nella casella di ricerca qui sopra. Buona esplorazione!',
   
   // Search
   searchPlaceholder: 'Inserisci il nome della città',
+  searchPlaceholderMobile: 'Nome città',
   searchButton: 'Cerca',
   
   // Weather display

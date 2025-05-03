@@ -9,7 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { ThemeToggle } from './ui/theme-toggle';
 import language from '../lib/language';
 
-function useMediaQuery(query: string): boolean {
+export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {

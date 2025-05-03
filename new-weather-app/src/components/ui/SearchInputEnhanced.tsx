@@ -11,6 +11,7 @@ import { Input } from './input';
 import { Card, CardContent } from './card';
 import { cn } from '../../lib/utils';
 import language from '../../lib/language';
+import { useMediaQuery } from '../AppLayout';
 
 type SearchInputEnhancedProps = {
   userInput: string;
@@ -29,6 +30,7 @@ export const SearchInputEnhanced = ({
   handleLocationSelect,
   className,
 }: SearchInputEnhancedProps) => {
+  const isMobile = useMediaQuery('(max-width: 640px)');
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -178,7 +180,7 @@ export const SearchInputEnhanced = ({
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={handleInputKeyDown}
           onFocus={() => locations.length > 0 && setIsOpen(true)}
-          placeholder={language.searchPlaceholder}
+          placeholder={isMobile ? (language.searchPlaceholderMobile || 'Search city') : (language.searchPlaceholder || 'Enter city name')}
           className='flex-1 border-2 border-primary rounded-sm focus-visible:ring-2 focus-visible:ring-primary/50'
           aria-autocomplete='list'
           aria-controls={

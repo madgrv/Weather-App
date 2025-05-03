@@ -11,6 +11,7 @@ const hu = {
   
   // Search
   searchPlaceholder: 'Írja be a város nevét',
+  searchPlaceholderMobile: 'Város',
   searchButton: 'Keresés',
   
   // Weather display

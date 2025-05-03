@@ -11,6 +11,7 @@ const fr = {
   
   // Search
   searchPlaceholder: 'Saisissez le nom de la ville',
+  searchPlaceholderMobile: 'Ville',
   searchButton: 'Rechercher',
   
   // Weather display

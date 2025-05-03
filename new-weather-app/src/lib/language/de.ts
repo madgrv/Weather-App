@@ -11,6 +11,7 @@ const de = {
   
   // Search
   searchPlaceholder: 'Städtenamen eingeben',
+  searchPlaceholderMobile: 'Stadt',
   searchButton: 'Suchen',
   
   // Weather display
