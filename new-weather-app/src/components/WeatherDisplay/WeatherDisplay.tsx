@@ -150,7 +150,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
               </CardTitle>
             </CardHeader>
             <CardContent className='p-6'>
-              <DateDisplay UTC={weatherData.timezone} data={weatherData} />
+              <DateDisplay UTC={weatherData.timezone} />
             </CardContent>
           </Card>
 

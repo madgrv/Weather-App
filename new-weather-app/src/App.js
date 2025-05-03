@@ -1,5 +1,3 @@
-import './App.css';
-import './globals.css'; // Import Tailwind CSS styles
 import { AppLayout } from './components/AppLayout';
 import { ThemeProvider } from './components/ui/theme-provider';
 
