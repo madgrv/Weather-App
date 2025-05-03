@@ -19,6 +19,8 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
       try {
         const baseUrl = config.API_URL;
         const apiKey = config.API_KEY;
+        // Get the current language code for API requests
+        const languageCode = language.getLanguage();
 
         if (!apiKey) {
           console.error('API key is missing');
@@ -26,7 +28,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
         }
 
         const response = await fetch(
-          `${baseUrl}/data/2.5/weather?lat=${selectedLocation.lat}&lon=${selectedLocation.lon}&appid=${apiKey}&units=metric`
+          `${baseUrl}/data/2.5/weather?lat=${selectedLocation.lat}&lon=${selectedLocation.lon}&appid=${apiKey}&units=metric&lang=${languageCode}`
         );
         const data = await response.json();
         setWeatherData(data);
@@ -113,7 +115,8 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                       {Math.round(weatherData.main.temp)}°C
                     </span>
                     <span className='text-sm text-muted-foreground mb-1'>
-                      {language.feelsLike} {Math.round(weatherData.main.feels_like)}°C
+                      {language.feelsLike}{' '}
+                      {Math.round(weatherData.main.feels_like)}°C
                     </span>
                   </div>
                   <p className='text-foreground capitalize'>
@@ -124,13 +127,17 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
               <div className='text-left @md:text-right mt-2 @md:mt-0'>
                 <div className='flex flex-col gap-1'>
                   <div className='flex items-center justify-start @md:justify-end gap-1'>
-                    <span className='text-muted-foreground'>{language.min}</span>
+                    <span className='text-muted-foreground'>
+                      {language.min}
+                    </span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_min)}°C
                     </span>
                   </div>
                   <div className='flex items-center justify-start @md:justify-end gap-1'>
-                    <span className='text-muted-foreground'>{language.max}</span>
+                    <span className='text-muted-foreground'>
+                      {language.max}
+                    </span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_max)}°C
                     </span>
@@ -141,9 +148,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
           </CardContent>
         </Card>
 
-        {/* Two column grid for the remaining cards on larger screens */}
         <div className='grid grid-cols-1 @md:grid-cols-2 gap-4 @sm:gap-6'>
-          {/* Local Time Card */}
           <Card className='@container overflow-hidden border-border'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
@@ -155,7 +160,6 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
             </CardContent>
           </Card>
 
-          {/* Weather Details Card */}
           <Card className='@container overflow-hidden border-border @md:col-span-2'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
@@ -200,7 +204,6 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
             </CardContent>
           </Card>
 
-          {/* Sun Schedule Card */}
           <Card className='@container overflow-hidden border-border @md:col-span-2'>
             <CardHeader className='bg-card border-b border-border pb-4'>
               <CardTitle className='text-lg font-semibold text-card-foreground'>
