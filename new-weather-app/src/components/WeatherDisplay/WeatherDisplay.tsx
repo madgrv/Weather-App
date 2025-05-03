@@ -93,7 +93,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent className='p-6'>
-            <div className='flex items-center justify-between'>
+            <div className='flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-4 sm:gap-0'>
               <div className='flex items-center gap-4'>
                 {weatherData.weather[0].icon && (
                   <img
@@ -120,15 +120,15 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                   </p>
                 </div>
               </div>
-              <div className='text-right'>
+              <div className='text-left sm:text-right mt-2 sm:mt-0'>
                 <div className='flex flex-col gap-1'>
-                  <div className='flex items-center justify-end gap-1'>
+                  <div className='flex items-center justify-start sm:justify-end gap-1'>
                     <span className='text-muted-foreground'>Min:</span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_min)}°C
                     </span>
                   </div>
-                  <div className='flex items-center justify-end gap-1'>
+                  <div className='flex items-center justify-start sm:justify-end gap-1'>
                     <span className='text-muted-foreground'>Max:</span>
                     <span className='font-semibold text-foreground'>
                       {Math.round(weatherData.main.temp_max)}°C
@@ -141,7 +141,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
         </Card>
 
         {/* Two column grid for the remaining cards on larger screens */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6'>
           {/* Local Time Card */}
           <Card className='overflow-hidden border-border'>
             <CardHeader className='bg-card border-b border-border pb-4'>
@@ -208,12 +208,12 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
             </CardHeader>
             <CardContent className='p-0'>
               <div className='grid grid-cols-1 sm:grid-cols-2'>
-                <div className='p-6 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 flex items-center justify-between'>
+                <div className='p-4 sm:p-6 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 flex items-center justify-between'>
                   <div>
                     <div className='text-sm text-amber-600 dark:text-amber-400'>
                       Sunrise
                     </div>
-                    <div className='text-lg font-semibold text-amber-700 dark:text-amber-300'>
+                    <div className='text-base sm:text-lg font-semibold text-amber-700 dark:text-amber-300'>
                       {new Date(
                         (weatherData.sys.sunrise + weatherData.timezone) * 1000
                       ).toLocaleTimeString('en-GB', {
@@ -222,27 +222,29 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                       })}
                     </div>
                   </div>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={1.5}
-                    stroke='currentColor'
-                    className='w-8 h-8 text-amber-500 dark:text-amber-400'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z'
-                    />
-                  </svg>
+                  <div className='text-amber-500 dark:text-amber-400'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={1.5}
+                      stroke='currentColor'
+                      className='w-8 h-8 sm:w-10 sm:h-10'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z'
+                      />
+                    </svg>
+                  </div>
                 </div>
-                <div className='p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 flex items-center justify-between'>
+                <div className='p-4 sm:p-6 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 flex items-center justify-between'>
                   <div>
-                    <div className='text-sm text-blue-600 dark:text-blue-400'>
+                    <div className='text-sm text-indigo-600 dark:text-indigo-400'>
                       Sunset
                     </div>
-                    <div className='text-lg font-semibold text-blue-700 dark:text-blue-300'>
+                    <div className='text-base sm:text-lg font-semibold text-indigo-700 dark:text-indigo-300'>
                       {new Date(
                         (weatherData.sys.sunset + weatherData.timezone) * 1000
                       ).toLocaleTimeString('en-GB', {
@@ -251,20 +253,22 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                       })}
                     </div>
                   </div>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={1.5}
-                    stroke='currentColor'
-                    className='w-8 h-8 text-blue-500 dark:text-blue-400'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z'
-                    />
-                  </svg>
+                  <div className='text-indigo-500 dark:text-indigo-400'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={1.5}
+                      stroke='currentColor'
+                      className='w-8 h-8 sm:w-10 sm:h-10'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z'
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </CardContent>

@@ -11,6 +11,7 @@ type SearchInputProps = {
   locations: Location[];
   handleSearch: () => void;
   handleLocationSelect: (selection: Selection) => void;
+  className?: string;
 };
 
 export const SearchInput = ({
@@ -19,6 +20,7 @@ export const SearchInput = ({
   locations,
   handleSearch,
   handleLocationSelect,
+  className,
 }: SearchInputProps) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -26,17 +28,17 @@ export const SearchInput = ({
   };
 
   return (
-    <Card className="w-full max-w-2xl sticky top-1 mb-2 p-4">
-      <form onSubmit={handleSubmit} className="flex items-center">
+    <Card className={`w-full max-w-full sticky top-1 mb-2 p-4 ${className || ''}`}>
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-2">
         <Input
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="Enter city name"
           required
-          className="h-[3em] rounded-l-md border-2 border-primary focus:ring-2 focus:ring-primary/50"
+          className="h-[3em] w-full rounded-md border-2 border-primary focus:ring-2 focus:ring-primary/50"
         />
-        <Button type="submit" className="h-[3em] w-2/5 max-w-[7em] rounded-r-md font-bold text-base ml-[-1px]">
+        <Button type="submit" className="h-[3em] w-full sm:w-auto px-6 rounded-md font-bold text-base">
           Search
         </Button>
       </form>
