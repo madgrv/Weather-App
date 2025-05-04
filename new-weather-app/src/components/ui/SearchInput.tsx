@@ -10,7 +10,7 @@ import { Button } from './button';
 import { Input } from './input';
 import { Card, CardContent } from './card';
 import { cn } from '../../lib/utils';
-import language from '../../lib/language';
+import { useLanguage } from '../../lib/language/useLanguage';
 
 type SearchInputProps = {
   userInput: string;
@@ -29,6 +29,8 @@ export const SearchInput = ({
   handleLocationSelect,
   className,
 }: SearchInputProps) => {
+  const { language } = useLanguage();
+
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -148,8 +150,8 @@ export const SearchInput = ({
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={handleInputKeyDown}
           onFocus={() => locations.length > 0 && setIsOpen(true)}
-          placeholder={language.search.placeholder}
-          aria-label={language.search.ariaLabel}
+          placeholder={language?.search?.placeholder || 'Search for a city...'}
+          aria-label={language?.search?.ariaLabel || 'Search for a city'}
           className='flex-1 border-2 border-primary rounded-sm focus-visible:ring-2 focus-visible:ring-primary/50'
           aria-autocomplete='list'
           aria-controls={isOpen && locations.length > 0 ? 'location-results' : ''}
@@ -160,9 +162,9 @@ export const SearchInput = ({
         <Button
           type='submit'
           className='ml-2'
-          aria-label={language.search.button}
+          aria-label={language?.search?.button || 'Search'}
         >
-          {language.search.button}
+          {language?.search?.button || 'Search'}
         </Button>
       </form>
       {isOpen && locations.length > 0 && (
@@ -205,7 +207,7 @@ export const SearchInput = ({
       )}
       {isOpen && locations.length === 0 && (
         <div className='p-2 text-muted-foreground text-sm'>
-          {language.search.noResults}
+          {language?.search?.noResults || 'No locations found.'}
         </div>
       )}
     </div>

@@ -7,7 +7,7 @@ import { getLocation } from '../api/getLocation';
 import config from '../config';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { ThemeToggle } from './ui/theme-toggle';
-import language from '../lib/language/en';
+import { useLanguage } from '../lib/language/useLanguage';
 
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
@@ -26,6 +26,9 @@ function useMediaQuery(query: string): boolean {
 }
 
 export const AppLayout = () => {
+  // Use the language hook to get access to the language module
+  const { language } = useLanguage();
+  
   const [userInput, setUserInput] = useState('');
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
@@ -60,11 +63,11 @@ export const AppLayout = () => {
             <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center'>
               <div className='flex items-center gap-2'>
                 <CardTitle className='text-2xl font-bold text-primary whitespace-nowrap px-3'>
-                  {language.app.title}
+                  {language?.app?.title || 'WeatherUp!'}
                 </CardTitle>
                 {!isMobile ? (
                   <span className='text-sm font-medium text-muted-foreground'>
-                    {language.app.subtitle}
+                    {language?.app?.subtitle || 'World Weather'}
                   </span>
                 ) : null}
                 {isMobile ? <ThemeToggle /> : null}
@@ -74,7 +77,7 @@ export const AppLayout = () => {
                 <div className='flex items-center gap-2'>
                   {isMobile ? (
                     <span className='text-sm font-medium text-muted-foreground'>
-                      {language.app.subtitle}
+                      {language?.app?.subtitle || 'World Weather'}
                     </span>
                   ) : null}
                   <div className='text-sm text-muted-foreground'>
@@ -104,11 +107,11 @@ export const AppLayout = () => {
             <div className='p-6 text-center flex flex-col items-center gap-4'>
               <div className='mb-4'>
                 <span className='font-bold text-xl text-primary px-2'>
-                  {language.app.welcome}
+                  {language?.app?.welcome || 'Welcome to WeatherUp! 🌤️'}
                 </span>
               </div>
               <p className='text-base text-foreground'>
-                {language.app.instructions}
+                {language?.app?.instructions || 'Enter a city name to check the weather and stay informed about current conditions. Get started by typing in the search box above. Happy exploring!'}
               </p>
             </div>
           )}
