@@ -5,6 +5,7 @@ import React, {
   useEffect,
   KeyboardEvent,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { Location, Selection } from '../../types';
 import { Button } from './button';
 import { Input } from './input';
@@ -40,10 +41,10 @@ export const SearchInput = ({
   useEffect(() => {
     if (locations.length > 0) {
       setIsOpen(true);
+      setFocusedIndex(-1);
     } else {
       setIsOpen(false);
     }
-    setFocusedIndex(-1);
   }, [locations]);
 
   useEffect(() => {
@@ -51,6 +52,8 @@ export const SearchInput = ({
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target as Node) &&
+        resultsRef.current &&
+        !resultsRef.current.contains(event.target as Node) &&
         isOpen
       ) {
         setIsOpen(false);
@@ -61,6 +64,15 @@ export const SearchInput = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (focusedIndex >= 0 && itemRefs.current[focusedIndex]) {
+      itemRefs.current[focusedIndex]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [focusedIndex]);
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && (!isOpen || !locations.length)) {
@@ -141,8 +153,13 @@ export const SearchInput = ({
     return String.fromCodePoint(...codePoints);
   };
 
+  const handleItemClick = (location: Location) => {
+    handleLocationSelect(location);
+    setIsOpen(false);
+  };
+
   return (
-    <div ref={containerRef} className={className}>
+    <div ref={containerRef} className={cn('relative w-full', className)}>
       <form onSubmit={handleSubmit} className='flex gap-2 w-full'>
         <Input
           type='text'
@@ -154,7 +171,9 @@ export const SearchInput = ({
           aria-label={language?.search?.ariaLabel || 'Search for a city'}
           className='flex-1 border-2 border-primary rounded-sm focus-visible:ring-2 focus-visible:ring-primary/50'
           aria-autocomplete='list'
-          aria-controls={isOpen && locations.length > 0 ? 'location-results' : ''}
+          aria-controls={
+            isOpen && locations.length > 0 ? 'location-results' : ''
+          }
           aria-activedescendant={
             isOpen && focusedIndex >= 0 ? `location-option-${focusedIndex}` : ''
           }
@@ -167,46 +186,71 @@ export const SearchInput = ({
           {language?.search?.button || 'Search'}
         </Button>
       </form>
-      {isOpen && locations.length > 0 && (
-        <Card
-          ref={resultsRef}
-          className='absolute z-10 mt-1 w-full border border-primary bg-background shadow-lg rounded-md overflow-y-auto max-h-60'
-          tabIndex={-1}
-          onKeyDown={handleDropdownKeyDown}
-        >
-          <CardContent className='p-2'>
-            {locations.map((location, idx) => (
-              <div
-                key={location.lat + '-' + location.lon}
-                id={`location-option-${idx}`}
-                ref={(el) => (itemRefs.current[idx] = el)}
-                className={cn(
-                  'flex items-center px-2 py-1 cursor-pointer rounded-sm',
-                  idx === focusedIndex
-                    ? 'bg-primary text-primary-foreground'
-                    : 'hover:bg-accent',
-                )}
-                onClick={() => {
-                  handleLocationSelect(location);
-                  setIsOpen(false);
-                }}
-                onMouseEnter={() => setFocusedIndex(idx)}
-                tabIndex={0}
-                role='option'
-                aria-selected={idx === focusedIndex}
+      {isOpen &&
+        locations.length > 0 &&
+        createPortal(
+          <div
+            className='fixed z-50'
+            style={{
+              width:
+                containerRef.current?.getBoundingClientRect().width || '100%',
+              left: containerRef.current?.getBoundingClientRect().left || 0,
+              top:
+                (containerRef.current?.getBoundingClientRect().bottom || 0) + 8,
+            }}
+          >
+            <Card
+              ref={resultsRef}
+              className='w-full border border-primary shadow-lg rounded-md bg-background/80 backdrop-blur-md'
+              tabIndex={-1}
+              onKeyDown={handleDropdownKeyDown}
+            >
+              <CardContent
+                className='p-2 overflow-y-auto'
+                style={{ maxHeight: '60vh' }}
               >
-                <span className='mr-2'>{getCountryFlag(location.country ?? '')}</span>
-                <span>
-                  {location.name}, {location.state ? `${location.state}, ` : ''}
-                  {location.country}
-                </span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      )}
+                {locations.map((location, idx) => (
+                  <div
+                    key={location.lat + '-' + location.lon}
+                    id={`location-option-${idx}`}
+                    ref={(el) => (itemRefs.current[idx] = el)}
+                    className={cn(
+                      'flex items-center px-2 py-1 cursor-pointer rounded-sm',
+                      idx === focusedIndex
+                        ? 'bg-primary text-primary-foreground'
+                        : 'hover:bg-accent'
+                    )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleItemClick(location);
+                    }}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleItemClick(location);
+                    }}
+                    onMouseEnter={() => setFocusedIndex(idx)}
+                    tabIndex={0}
+                    role='option'
+                    aria-selected={idx === focusedIndex}
+                  >
+                    <span className='mr-2'>
+                      {getCountryFlag(location.country ?? '')}
+                    </span>
+                    <span>
+                      {location.name},{' '}
+                      {location.state ? `${location.state}, ` : ''}
+                      {location.country}
+                    </span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>,
+          document.body
+        )}
       {isOpen && locations.length === 0 && (
-        <div className='p-2 text-muted-foreground text-sm'>
+        <div className='p-2 text-muted-foreground text-sm m-2'>
           {language?.search?.noResults || 'No locations found.'}
         </div>
       )}

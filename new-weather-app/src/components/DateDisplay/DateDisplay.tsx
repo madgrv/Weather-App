@@ -67,7 +67,7 @@ export const DateDisplay = ({ UTC }: DateDisplayProps) => {
 		<>
 			{UTC ? (
 				<div className="flex flex-col items-start p-2 text-foreground">
-					<span className="text-xs text-muted-foreground mb-1">{language.weather.localTime}</span>
+					<span className="text-xs text-muted-foreground mb-1">{language?.weather?.localTime || 'Local Time'}</span>
 					<h6 className="text-base font-semibold">{locationDate}</h6>
 					<h6 className="text-base font-semibold">{locationTime}</h6>
 				</div>
