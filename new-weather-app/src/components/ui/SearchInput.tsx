@@ -48,6 +48,19 @@ export const SearchInput = ({
   }, [locations]);
 
   useEffect(() => {
+    // Debounce user input to prevent excessive filtering
+    if (userInput.length === 0) return;
+    
+    const timer = setTimeout(() => {
+      if (userInput.length >= 2) {
+        setUserInput(userInput);
+      }
+    }, 300); // 300ms debounce delay
+
+    return () => clearTimeout(timer);
+  }, [userInput, setUserInput]);
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         containerRef.current &&
@@ -237,7 +250,7 @@ export const SearchInput = ({
                     <span className='mr-2'>
                       {getCountryFlag(location.country ?? '')}
                     </span>
-                    <span>
+                    <span className='text-sm'>
                       {location.name},{' '}
                       {location.state ? `${location.state}, ` : ''}
                       {location.country}

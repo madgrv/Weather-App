@@ -4,6 +4,7 @@ import SearchInput from './ui/SearchInput';
 import { WeatherDisplay } from './WeatherDisplay';
 import { Location } from '../types';
 import { getLocation } from '../api/getLocation';
+import { preloadPopularCities, getCitySuggestions } from '../api/getCities';
 import config from '../config';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { ThemeToggle } from './ui/theme-toggle';
@@ -34,8 +35,52 @@ export const AppLayout = () => {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null
   );
+  const [citiesLoaded, setCitiesLoaded] = useState<boolean>(false);
 
   const isMobile = useMediaQuery('(max-width: 639px)');
+
+  // Fetch popular cities on component mount
+  useEffect(() => {
+    const loadPopularCities = async () => {
+      const apiKey = config.API_KEY;
+      if (!apiKey) {
+        console.error('Missing API key');
+        return;
+      }
+      
+      try {
+        await preloadPopularCities(apiKey);
+        setCitiesLoaded(true);
+      } catch (error) {
+        console.error('Failed to load popular cities:', error);
+      }
+    };
+    
+    loadPopularCities();
+  }, []);
+
+  // Handle user input changes to fetch city suggestions
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (citiesLoaded && userInput.length >= 2) {
+        const apiKey = config.API_KEY;
+        if (!apiKey) return;
+        
+        try {
+          const suggestions = await getCitySuggestions(userInput, apiKey);
+          if (suggestions.length > 0) {
+            setLocations(suggestions);
+          }
+        } catch (error) {
+          console.error('Failed to fetch city suggestions:', error);
+        }
+      } else if (userInput.length === 0) {
+        setLocations([]);
+      }
+    };
+    
+    fetchSuggestions();
+  }, [userInput, citiesLoaded]);
 
   const handleSearch = async () => {
     const apiKey = config.API_KEY;

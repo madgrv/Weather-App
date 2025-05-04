@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getFlagEmoji, getWeatherIcon } from '../../helpers';
 import { Location, WeatherData } from '../../types';
 import { DateDisplay } from '../DateDisplay';
@@ -6,6 +6,7 @@ import config from '../../config';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { useLanguage } from '../../lib/language/useLanguage';
+import { RefreshCw } from 'lucide-react';
 
 type WeatherDisplayProps = {
   selectedLocation: Location;
@@ -16,36 +17,50 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
-  useEffect(() => {
-    const fetchWeatherData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const baseUrl = config.API_URL;
-        const apiKey = config.API_KEY;
-        if (!apiKey) {
-          throw new Error('API key is missing');
-        }
-        const response = await fetch(
-          `${baseUrl}/data/2.5/weather?lat=${selectedLocation.lat}&lon=${selectedLocation.lon}&appid=${apiKey}&units=metric`
-        );
-        if (!response.ok) {
-          throw new Error(`Weather API responded with status: ${response.status}`);
-        }
-        const data = await response.json();
-        setWeatherData(data);
-      } catch (error) {
-        console.error('Error fetching weather data:', error);
-        setError(error instanceof Error ? error.message : 'Failed to fetch weather data');
-      } finally {
-        setIsLoading(false);
+  // Extract fetch logic into a reusable function
+  const fetchWeatherData = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const baseUrl = config.API_URL;
+      const apiKey = config.API_KEY;
+      if (!apiKey) {
+        throw new Error('API key is missing');
       }
-    };
-    fetchWeatherData();
+      const response = await fetch(
+        `${baseUrl}/data/2.5/weather?lat=${selectedLocation.lat}&lon=${selectedLocation.lon}&appid=${apiKey}&units=metric`
+      );
+      if (!response.ok) {
+        throw new Error(`Weather API responded with status: ${response.status}`);
+      }
+      const data = await response.json();
+      setWeatherData(data);
+      setLastRefreshed(new Date());
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+      setError(error instanceof Error ? error.message : 'Failed to fetch weather data');
+    } finally {
+      setIsLoading(false);
+    }
   }, [selectedLocation]);
 
-  if (isLoading) {
+  // Fetch weather data when location changes
+  useEffect(() => {
+    fetchWeatherData();
+  }, [fetchWeatherData]);
+
+  // Format the last refreshed time
+  const formatLastRefreshed = () => {
+    return lastRefreshed.toLocaleTimeString([], { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  };
+
+  if (isLoading && !weatherData) {
     return (
       <div className='text-center p-8 text-muted-foreground'>
         <div className="flex flex-col items-center justify-center gap-2">
@@ -56,38 +71,12 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
     );
   }
 
-  if (error) {
+  if (error && !weatherData) {
     return (
       <div className='text-center p-8 text-red-500'>
         <p>{error}</p>
         <button 
-          onClick={() => {
-            const fetchWeatherData = async () => {
-              setIsLoading(true);
-              setError(null);
-              try {
-                const baseUrl = config.API_URL;
-                const apiKey = config.API_KEY;
-                if (!apiKey) {
-                  throw new Error('API key is missing');
-                }
-                const response = await fetch(
-                  `${baseUrl}/data/2.5/weather?lat=${selectedLocation.lat}&lon=${selectedLocation.lon}&appid=${apiKey}&units=metric`
-                );
-                if (!response.ok) {
-                  throw new Error(`Weather API responded with status: ${response.status}`);
-                }
-                const data = await response.json();
-                setWeatherData(data);
-              } catch (error) {
-                console.error('Error fetching weather data:', error);
-                setError(error instanceof Error ? error.message : 'Failed to fetch weather data');
-              } finally {
-                setIsLoading(false);
-              }
-            };
-            fetchWeatherData();
-          }}
+          onClick={fetchWeatherData}
           className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
         >
           {language?.common?.tryAgain || 'Try Again'}
@@ -149,16 +138,29 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
               </span>
             </h2>
           </div>
-          <Badge
-            variant='secondary'
-            className='flex items-center gap-1 text-lg px-4 py-2 bg-primary/10 text-primary border border-primary/20 font-medium'
-          >
-            <span className='text-2xl mr-1.5'>
-              {getFlagEmoji(selectedLocation.country)}
-            </span>{' '}
-            {selectedLocation.state ? `${selectedLocation.state}, ` : ''}
-            {selectedLocation.country}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge
+              variant='secondary'
+              className='flex items-center gap-1 text-lg px-4 py-2 bg-primary/10 text-primary border border-primary/20 font-medium'
+            >
+              <span className='text-2xl mr-1.5'>
+                {getFlagEmoji(selectedLocation.country)}
+              </span>{' '}
+              {selectedLocation.state ? `${selectedLocation.state}, ` : ''}
+              {selectedLocation.country}
+            </Badge>
+            <button 
+              onClick={fetchWeatherData}
+              disabled={isLoading}
+              className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
+              title={language?.weather?.refresh || 'Refresh weather data'}
+            >
+              <RefreshCw className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+        </div>
+        <div className="text-xs text-muted-foreground text-right">
+          {language?.weather?.lastUpdated || 'Last updated'}: {formatLastRefreshed()}
         </div>
         <Card className='overflow-hidden border-border'>
           <CardHeader className='bg-card border-b border-border pb-4'>
