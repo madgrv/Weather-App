@@ -37,20 +37,54 @@ export const SearchInput = ({
   const resultsRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    left: 0,
+    width: '100%',
+  });
 
   useEffect(() => {
     if (locations.length > 0) {
       setIsOpen(true);
       setFocusedIndex(-1);
+      updateDropdownPosition();
     } else {
       setIsOpen(false);
     }
   }, [locations]);
 
+  const updateDropdownPosition = () => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.height + 8, // 8px gap
+        left: 0,
+        width: `${rect.width}px`,
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Update dropdown position on scroll and resize
+    const handlePositionUpdate = () => {
+      if (isOpen && locations.length > 0) {
+        updateDropdownPosition();
+      }
+    };
+
+    window.addEventListener('scroll', handlePositionUpdate, true);
+    window.addEventListener('resize', handlePositionUpdate);
+
+    return () => {
+      window.removeEventListener('scroll', handlePositionUpdate, true);
+      window.removeEventListener('resize', handlePositionUpdate);
+    };
+  }, [isOpen, locations.length]);
+
   useEffect(() => {
     // Debounce user input to prevent excessive filtering
     if (userInput.length === 0) return;
-    
+
     const timer = setTimeout(() => {
       if (userInput.length >= 2) {
         setUserInput(userInput);
@@ -199,17 +233,14 @@ export const SearchInput = ({
           {language?.search?.button || 'Search'}
         </Button>
       </form>
-      {isOpen &&
-        locations.length > 0 &&
+      {isOpen && locations.length > 0 &&
         createPortal(
           <div
             className='fixed z-50'
             style={{
-              width:
-                containerRef.current?.getBoundingClientRect().width || '100%',
+              width: dropdownPosition.width,
               left: containerRef.current?.getBoundingClientRect().left || 0,
-              top:
-                (containerRef.current?.getBoundingClientRect().bottom || 0) + 8,
+              top: (containerRef.current?.getBoundingClientRect().bottom || 0) + 8,
             }}
           >
             <Card
