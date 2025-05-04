@@ -60,6 +60,37 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
     });
   };
 
+  // Calculate the percentage of daylight that has passed
+  function calculateDayProgress(sunrise: number, sunset: number): number {
+    const now = Math.floor(Date.now() / 1000); // Current time in seconds
+    const dayLength = sunset - sunrise; // Total length of day in seconds
+    
+    if (now < sunrise) return 0; // Before sunrise
+    if (now > sunset) return 100; // After sunset
+    
+    const dayProgress = ((now - sunrise) / dayLength) * 100;
+    return Math.min(Math.max(dayProgress, 0), 100); // Ensure it's between 0-100
+  }
+
+  // Calculate the percentage of night that has passed
+  function calculateNightProgress(sunset: number, nextSunrise: number): number {
+    const now = Math.floor(Date.now() / 1000); // Current time in seconds
+    
+    const nightLength = nextSunrise - sunset; // Total length of night in seconds
+    
+    if (now < sunset) return 0; // Before sunset (still day)
+    if (now > nextSunrise) return 100; // After next sunrise
+    
+    const nightProgress = ((now - sunset) / nightLength) * 100;
+    return Math.min(Math.max(nightProgress, 0), 100); // Ensure it's between 0-100
+  }
+
+  // Determine if it's currently night time
+  const isNight = (): boolean => {
+    const now = Math.floor(Date.now() / 1000);
+    return now < (weatherData?.sys?.sunrise || 0) || now > (weatherData?.sys?.sunset || 0);
+  };
+
   if (isLoading && !weatherData) {
     return (
       <div className='text-center p-8 text-muted-foreground'>
@@ -106,18 +137,6 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
     const date = new Date(timestamp * 1000);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
-
-  // Calculate the percentage of daylight that has passed
-  function calculateDayProgress(sunrise: number, sunset: number): number {
-    const now = Math.floor(Date.now() / 1000); // Current time in seconds
-    const dayLength = sunset - sunrise; // Total length of day in seconds
-    
-    if (now < sunrise) return 0; // Before sunrise
-    if (now > sunset) return 100; // After sunset
-    
-    const dayProgress = ((now - sunrise) / dayLength) * 100;
-    return Math.min(Math.max(dayProgress, 0), 100); // Ensure it's between 0-100
-  }
 
   return (
     <div className='p-6'>
@@ -279,84 +298,264 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
           <CardContent className='p-6'>
             <div className='flex flex-col space-y-6'>
               <div className='flex justify-between items-center'>
-                <div className='flex items-center gap-3'>
-                  <div className='bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-full'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      stroke='currentColor'
-                      strokeWidth='2'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      className='text-yellow-500'
-                    >
-                      <path d='M12 2v8'/>
-                      <path d='m4.93 10.93 1.41 1.41'/>
-                      <path d='M2 18h2'/>
-                      <path d='M20 18h2'/>
-                      <path d='m19.07 10.93-1.41 1.41'/>
-                      <path d='M22 22H2'/>
-                      <path d='m8 6 4-4 4 4'/>
-                      <path d='M16 18a4 4 0 0 0-8 0'/>
-                    </svg>
-                  </div>
-                  <div>
-                    <p className='text-sm text-muted-foreground'>
-                      {language?.weather?.sunrise || 'Sunrise'}
-                    </p>
-                    <p className='text-lg font-semibold'>
-                      {formatTime(weatherData.sys.sunrise)}
-                    </p>
-                  </div>
-                </div>
-                <div className='flex items-center gap-3'>
-                  <div className='bg-orange-100 dark:bg-orange-900/30 p-2 rounded-full'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      stroke='currentColor'
-                      strokeWidth='2'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      className='text-orange-500'
-                    >
-                      <path d='M12 10V2'/>
-                      <path d='m4.93 10.93 1.41-1.41'/>
-                      <path d='M2 18h2'/>
-                      <path d='M20 18h2'/>
-                      <path d='m19.07 10.93-1.41-1.41'/>
-                      <path d='M22 22H2'/>
-                      <path d='m16 6-4 4-4-4'/>
-                      <path d='M16 18a4 4 0 0 0-8 0'/>
-                    </svg>
-                  </div>
-                  <div>
-                    <p className='text-sm text-muted-foreground'>
-                      {language?.weather?.sunset || 'Sunset'}
-                    </p>
-                    <p className='text-lg font-semibold'>
-                      {formatTime(weatherData.sys.sunset)}
-                    </p>
-                  </div>
-                </div>
+                {!isNight() ? (
+                  <>
+                    {/* Day time icons */}
+                    <div className='flex items-center gap-3'>
+                      <div className='bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-full'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='24'
+                          height='24'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          className='text-yellow-500'
+                        >
+                          <path d='M12 2v8'/>
+                          <path d='m4.93 10.93 1.41 1.41'/>
+                          <path d='M2 18h2'/>
+                          <path d='M20 18h2'/>
+                          <path d='m19.07 10.93-1.41 1.41'/>
+                          <path d='M22 22H2'/>
+                          <path d='m8 6 4-4 4 4'/>
+                          <path d='M16 18a4 4 0 0 0-8 0'/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className='text-sm text-muted-foreground'>
+                          {language?.weather?.sunrise || 'Sunrise'}
+                        </p>
+                        <p className='text-lg font-semibold'>
+                          {formatTime(weatherData?.sys?.sunrise || 0)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                      <div className='bg-orange-100 dark:bg-orange-900/30 p-2 rounded-full'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='24'
+                          height='24'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          className='text-orange-500'
+                        >
+                          <path d='M12 10V2'/>
+                          <path d='m4.93 10.93 1.41-1.41'/>
+                          <path d='M2 18h2'/>
+                          <path d='M20 18h2'/>
+                          <path d='m19.07 10.93-1.41-1.41'/>
+                          <path d='M22 22H2'/>
+                          <path d='m16 6-4 4-4-4'/>
+                          <path d='M16 18a4 4 0 0 0-8 0'/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className='text-sm text-muted-foreground'>
+                          {language?.weather?.sunset || 'Sunset'}
+                        </p>
+                        <p className='text-lg font-semibold'>
+                          {formatTime(weatherData?.sys?.sunset || 0)}
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Night time icons (inverted) */}
+                    <div className='flex items-center gap-3'>
+                      <div className='bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-full'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='24'
+                          height='24'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          className='text-indigo-500'
+                        >
+                          <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className='text-sm text-muted-foreground'>
+                          {language?.weather?.sunset || 'Sunset'}
+                        </p>
+                        <p className='text-lg font-semibold'>
+                          {formatTime(weatherData?.sys?.sunset || 0)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                      <div className='bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-full'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='24'
+                          height='24'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          className='text-yellow-500'
+                        >
+                          <circle cx='12' cy='12' r='4'/>
+                          <path d='M12 2v2'/>
+                          <path d='M12 20v2'/>
+                          <path d='m4.93 4.93 1.41 1.41'/>
+                          <path d='m17.66 17.66 1.41 1.41'/>
+                          <path d='M2 12h2'/>
+                          <path d='M20 12h2'/>
+                          <path d='m6.34 17.66-1.41 1.41'/>
+                          <path d='m19.07 4.93-1.41 1.41'/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className='text-sm text-muted-foreground'>
+                          {language?.weather?.nextSunrise || 'Next Sunrise'}
+                        </p>
+                        <p className='text-lg font-semibold'>
+                          {formatTime((weatherData?.sys?.sunrise || 0) + 86400)}
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className='relative w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden'>
-                <div 
-                  className='absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400'
-                  style={{
-                    width: `${calculateDayProgress(weatherData.sys.sunrise, weatherData.sys.sunset)}%`
-                  }}
-                ></div>
-              </div>
-              <div className='flex justify-between text-xs text-muted-foreground'>
-                <span>{formatTime(weatherData.sys.sunrise)}</span>
-                <span>{formatTime(weatherData.sys.sunset)}</span>
+              <div className='space-y-4'>
+                {/* Show Day Progress Bar during day time */}
+                {!isNight() && (
+                  <div className='space-y-1'>
+                    <h4 className='text-sm font-medium text-muted-foreground'>
+                      {language?.weather?.dayProgress || 'Day Progress'}
+                    </h4>
+                    <div className='relative w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden'>
+                      <div 
+                        className='absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400'
+                        style={{
+                          width: `${calculateDayProgress(weatherData?.sys?.sunrise || 0, weatherData?.sys?.sunset || 0)}%`
+                        }}
+                      ></div>
+                    </div>
+                    <div className='flex justify-between text-xs text-muted-foreground'>
+                      <div className='flex items-center gap-1'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='12'
+                          height='12'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          className='text-yellow-500'
+                        >
+                          <circle cx='12' cy='12' r='4'/>
+                          <path d='M12 2v2'/>
+                          <path d='M12 20v2'/>
+                          <path d='m4.93 4.93 1.41 1.41'/>
+                          <path d='m17.66 17.66 1.41 1.41'/>
+                          <path d='M2 12h2'/>
+                          <path d='M20 12h2'/>
+                          <path d='m6.34 17.66-1.41 1.41'/>
+                          <path d='m19.07 4.93-1.41 1.41'/>
+                        </svg>
+                        <span>{formatTime(weatherData?.sys?.sunrise || 0)}</span>
+                      </div>
+                      <div className='flex items-center gap-1'>
+                        <span>{formatTime(weatherData?.sys?.sunset || 0)}</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='12'
+                          height='12'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          className='text-indigo-400'
+                        >
+                          <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Show Night Progress Bar during night time */}
+                {isNight() && (
+                  <div className='space-y-1'>
+                    <h4 className='text-sm font-medium text-muted-foreground'>
+                      {language?.weather?.nightProgress || 'Night Progress'}
+                    </h4>
+                    <div className='relative w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden'>
+                      <div 
+                        className='absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-900 via-blue-800 to-purple-900'
+                        style={{
+                          width: `${calculateNightProgress(weatherData?.sys?.sunset || 0, (weatherData?.sys?.sunrise || 0) + 86400)}%`
+                        }}
+                      ></div>
+                    </div>
+                    <div className='flex justify-between text-xs text-muted-foreground'>
+                      <div className='flex items-center gap-1'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='12'
+                          height='12'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          className='text-indigo-400'
+                        >
+                          <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/>
+                        </svg>
+                        <span>{formatTime(weatherData?.sys?.sunset || 0)}</span>
+                      </div>
+                      <div className='flex items-center gap-1'>
+                        <span>{formatTime((weatherData?.sys?.sunrise || 0) + 86400)}</span>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='12'
+                          height='12'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          className='text-yellow-500'
+                        >
+                          <circle cx='12' cy='12' r='4'/>
+                          <path d='M12 2v2'/>
+                          <path d='M12 20v2'/>
+                          <path d='m4.93 4.93 1.41 1.41'/>
+                          <path d='m17.66 17.66 1.41 1.41'/>
+                          <path d='M2 12h2'/>
+                          <path d='M20 12h2'/>
+                          <path d='m6.34 17.66-1.41 1.41'/>
+                          <path d='m19.07 4.93-1.41 1.41'/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
