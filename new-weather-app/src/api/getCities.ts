@@ -138,7 +138,7 @@ export const getCitySuggestions = async (
 
   // If we have partial matches, return them
   if (partialMatches.length > 0) {
-    return partialMatches.slice(0, 5); // Limit to 5 results
+    return partialMatches.slice(0, 6);
   }
 
   // If no matches in cache, fetch from API
@@ -151,5 +151,4 @@ export const getCitySuggestions = async (
 export const preloadPopularCities = async (apiKey: string): Promise<void> => {
   const promises = popularCities.map((city) => fetchCityData(city, apiKey));
   await Promise.all(promises);
-  console.log('Popular cities preloaded into cache');
 };

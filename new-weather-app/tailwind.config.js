@@ -31,6 +31,9 @@ module.exports = {
         destructive: "var(--destructive)",
         "destructive-foreground": "var(--destructive-foreground)",
       },
+      screens: {
+        'xs': '480px',
+      },
       borderRadius: {
         sm: purpleTheme.radius.sm,
         DEFAULT: purpleTheme.radius.md,

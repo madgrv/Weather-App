@@ -6,6 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { useLanguage } from '../../lib/language/useLanguage';
 import { RefreshCw } from 'lucide-react';
+import { getSunTimes } from '../../lib/sunTimes';
+import { SunriseIcon, SunsetIcon } from '../ui/svgs';
 
 type WeatherDisplayProps = {
   selectedLocation: Location;
@@ -17,6 +19,10 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+  const [sunTimes, setSunTimes] = useState<{
+    sunrise: number;
+    sunset: number;
+  } | null>(null);
 
   const fetchWeatherData = useCallback(async () => {
     setIsLoading(true);
@@ -52,6 +58,24 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
     fetchWeatherData();
   }, [fetchWeatherData]);
 
+  useEffect(() => {
+    if (weatherData?.coord && weatherData?.timezone) {
+      getSunTimes(
+        weatherData.coord.lat,
+        weatherData.coord.lon,
+        weatherData.timezone
+      )
+        .then((times) => {
+          if (times) {
+            setSunTimes(times);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching sun times:', error);
+        });
+    }
+  }, [weatherData?.coord, weatherData?.timezone]);
+
   const formatLastRefreshed = () => {
     return lastRefreshed.toLocaleTimeString([], {
       hour: '2-digit',
@@ -65,13 +89,10 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
 
     const now = new Date();
 
-    // getTimezoneOffset() returns minutes, positive for behind UTC, negative for ahead
     const browserOffsetSeconds = -now.getTimezoneOffset() * 60;
 
-    // Apply corrections for known problematic cities
     let locationOffsetSeconds = weatherData.timezone;
 
-    // Known timezone offsets for specific cities (in seconds from UTC)
     const knownTimezones: Record<string, Record<string, number>> = {
       FR: { Paris: 7200 }, // France, UTC+2
       IT: { Milan: 7200 }, // Italy, UTC+2
@@ -124,12 +145,10 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
   const formatTime = (timestamp: number) => {
     if (!weatherData?.timezone) return '';
 
-    // The API provides sunrise/sunset times in Unix timestamp (seconds since epoch)
     const utcDate = new Date(timestamp * 1000);
 
     let locationOffsetSeconds = weatherData.timezone;
 
-    // Known timezone offsets for specific cities (in seconds from UTC)
     const knownTimezones: Record<string, Record<string, number>> = {
       FR: { Paris: 7200 }, // France, UTC+2
       IT: { Milan: 7200 }, // Italy, UTC+2
@@ -167,52 +186,40 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
   };
 
   const isNight = (): boolean => {
-    if (!weatherData?.sys?.sunrise || !weatherData?.sys?.sunset) return false;
+    if (!sunTimes?.sunrise || !sunTimes?.sunset) return false;
 
     const locationTime = getLocationTimeSeconds();
-    
-    // Check if sunset is before sunrise (which shouldn't happen naturally)
-    // This indicates an API data issue or day boundary crossing
-    if (weatherData.sys.sunset < weatherData.sys.sunrise) {
-      // We're in a new day, after midnight but before sunrise
-      return locationTime < weatherData.sys.sunrise;
+
+    if (sunTimes.sunset < sunTimes.sunrise) {
+      return locationTime < sunTimes.sunrise;
     }
-    
-    // Normal case: It's night if current time is before sunrise OR after sunset
-    return locationTime < weatherData.sys.sunrise || locationTime > weatherData.sys.sunset;
+
+    return locationTime < sunTimes.sunrise || locationTime > sunTimes.sunset;
   };
 
   const formatDayLength = (sunset: number, sunrise: number) => {
-    // Ensure we're calculating the correct day length
     let dayLength = 0;
-    
+
     if (sunset > sunrise) {
-      // Normal case: sunrise and sunset on the same day
       dayLength = sunset - sunrise;
     } else {
-      // Edge case: sunset is on the next day
-      dayLength = (sunset + 86400) - sunrise;
+      dayLength = sunset + 86400 - sunrise;
     }
-    
+
     const hours = Math.floor(dayLength / 3600);
     const minutes = Math.floor((dayLength % 3600) / 60);
     return `${hours}h ${minutes}m`;
   };
 
   const formatNightLength = (sunset: number, sunrise: number) => {
-    // For night length, we need to ensure we're calculating from sunset to next sunrise
     let nightLength = 0;
-    
+
     if (sunrise > sunset) {
-      // Normal case: sunset today, sunrise tomorrow
       nightLength = sunrise - sunset;
     } else {
-      // Edge case: sunrise is before sunset in the data
-      // This means sunrise is from the current day and sunset is also from the current day
-      // So the night length is from sunset until sunrise + 24 hours
-      nightLength = (sunrise + 86400) - sunset;
+      nightLength = sunrise + 86400 - sunset;
     }
-    
+
     const hours = Math.floor(nightLength / 3600);
     const minutes = Math.floor((nightLength % 3600) / 60);
     return `${hours}h ${minutes}m`;
@@ -444,7 +451,6 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
               <div className='flex justify-between items-center'>
                 {!isNight() ? (
                   <>
-                    {/* Day time icons */}
                     <div className='flex items-center gap-3'>
                       <div className='bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-full'>
                         <svg
@@ -459,15 +465,14 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                           strokeLinejoin='round'
                           className='text-yellow-500'
                         >
-                          <circle cx='12' cy='12' r='4' />
-                          <path d='M12 2v8' />
+                          <circle cx='12' cy='16' r='4' />
+                          <path d='M12 2v6' />
                           <path d='m4.93 10.93 1.41 1.41' />
                           <path d='M2 18h2' />
                           <path d='M20 18h2' />
                           <path d='m19.07 10.93-1.41 1.41' />
                           <path d='M22 22H2' />
-                          <path d='m8 6 4-4 4 4' />
-                          <path d='M16 18a4 4 0 0 0-8 0' />
+                          <path d='m8 5 4-4 4 4' />
                         </svg>
                       </div>
                       <div>
@@ -475,7 +480,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                           {language?.weather?.sunrise || 'Sunrise'}
                         </p>
                         <p className='text-lg font-semibold'>
-                          {formatTime(weatherData?.sys?.sunrise || 0)}
+                          {formatTime(sunTimes?.sunrise || 0)}
                         </p>
                       </div>
                     </div>
@@ -493,7 +498,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                           strokeLinejoin='round'
                           className='text-orange-500'
                         >
-                          <path d='M12 10V2' />
+                          <path d='M12 8V2' />
                           <path d='m4.93 10.93 1.41-1.41' />
                           <path d='M2 18h2' />
                           <path d='M20 18h2' />
@@ -508,14 +513,13 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                           {language?.weather?.sunset || 'Sunset'}
                         </p>
                         <p className='text-lg font-semibold'>
-                          {formatTime(weatherData?.sys?.sunset || 0)}
+                          {formatTime(sunTimes?.sunset || 0)}
                         </p>
                       </div>
                     </div>
                   </>
                 ) : (
                   <>
-                    {/* Night time icons (inverted) */}
                     <div className='flex items-center gap-3'>
                       <div className='bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-full'>
                         <svg
@@ -538,7 +542,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                           {language?.weather?.sunset || 'Sunset'}
                         </p>
                         <p className='text-lg font-semibold'>
-                          {formatTime(weatherData?.sys?.sunset || 0)}
+                          {formatTime(sunTimes?.sunset || 0)}
                         </p>
                       </div>
                     </div>
@@ -572,7 +576,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                           {language?.weather?.nextSunrise || 'Next Sunrise'}
                         </p>
                         <p className='text-lg font-semibold'>
-                          {formatTime((weatherData?.sys?.sunrise || 0) + 86400)}
+                          {formatTime((sunTimes?.sunrise || 0) + 86400)}
                         </p>
                       </div>
                     </div>
@@ -580,27 +584,29 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                 )}
               </div>
               <div className='space-y-4'>
-                {/* Simple Day/Night display instead of progress bars */}
                 <div className='space-y-3'>
                   <h4 className='text-sm font-medium text-muted-foreground'>
-                    {!isNight() 
-                      ? (language?.weather?.dayTime || 'Daytime') 
-                      : (language?.weather?.nightTime || 'Nighttime')}
+                    {!isNight()
+                      ? language?.weather?.dayTime || 'Daytime'
+                      : language?.weather?.nightTime || 'Nighttime'}
                   </h4>
-                  
-                  {/* Day/Night status card */}
-                  <div className={`p-3 rounded-lg border ${!isNight() 
-                    ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/50' 
-                    : 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800/50'}`}>
-                    
+                  <div
+                    className={`p-3 rounded-lg border ${
+                      !isNight()
+                        ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/50'
+                        : 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800/50'
+                    }`}
+                  >
                     <div className='flex items-center justify-between'>
-                      {/* Left side - Current status */}
                       <div className='flex items-center gap-3'>
-                        <div className={`p-2.5 rounded-full ${!isNight() 
-                          ? 'bg-yellow-100 dark:bg-yellow-900/30' 
-                          : 'bg-indigo-100 dark:bg-indigo-900/30'}`}>
+                        <div
+                          className={`p-2.5 rounded-full ${
+                            !isNight()
+                              ? 'bg-yellow-100 dark:bg-yellow-900/30'
+                              : 'bg-indigo-100 dark:bg-indigo-900/30'
+                          }`}
+                        >
                           {!isNight() ? (
-                            // Sun icon
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
                               width='20'
@@ -614,17 +620,16 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                               className='text-yellow-500'
                             >
                               <circle cx='12' cy='12' r='4' />
-                              <path d='M12 2v2' />
-                              <path d='M12 20v2' />
-                              <path d='m4.93 4.93 1.41 1.41' />
-                              <path d='m17.66 17.66 1.41 1.41' />
-                              <path d='M2 12h2' />
-                              <path d='M20 12h2' />
-                              <path d='m6.34 17.66-1.41 1.41' />
-                              <path d='m19.07 4.93-1.41 1.41' />
+                              <path d='M12 22v-8' />
+                              <path d='m4.93 10.93 1.41 1.41' />
+                              <path d='M2 18h2' />
+                              <path d='M20 18h2' />
+                              <path d='m19.07 10.93-1.41 1.41' />
+                              <path d='M22 22H2' />
+                              <path d='m8 20 4-4 4 4' />
+                              <path d='M16 20a4 4 0 0 0-8 0' />
                             </svg>
                           ) : (
-                            // Moon icon
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
                               width='20'
@@ -643,87 +648,73 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                         </div>
                         <div>
                           <p className='font-medium'>
-                            {!isNight() 
-                              ? (language?.weather?.currentlyDay || 'Currently Day') 
-                              : (language?.weather?.currentlyNight || 'Currently Night')}
+                            {!isNight()
+                              ? language?.weather?.currentlyDay ||
+                                'Currently Day'
+                              : language?.weather?.currentlyNight ||
+                                'Currently Night'}
                           </p>
                           <p className='text-sm text-muted-foreground'>
                             {!isNight()
-                              ? `${language?.weather?.sunsetAt || 'Sunset at'} ${formatTime(weatherData?.sys?.sunset || 0)}`
-                              : `${language?.weather?.sunriseAt || 'Sunrise at'} ${formatTime(weatherData?.sys?.sunrise || 0)}`}
+                              ? `${
+                                  language?.weather?.sunsetAt || 'Sunset at'
+                                } ${formatTime(sunTimes?.sunset || 0)}`
+                              : `${
+                                  language?.weather?.sunriseAt || 'Sunrise at'
+                                } ${formatTime(sunTimes?.sunrise || 0)}`}
                           </p>
                         </div>
                       </div>
-                      
-                      {/* Right side - Next transition */}
                       <div className='flex flex-col items-end'>
                         <p className='text-sm text-muted-foreground'>
-                          {!isNight() 
-                            ? (language?.weather?.nextTransition || 'Next') 
-                            : (language?.weather?.nextTransition || 'Next')}
+                          {!isNight()
+                            ? language?.weather?.nextTransition || 'Next'
+                            : language?.weather?.nextTransition || 'Next'}
                         </p>
                         <div className='flex items-center gap-1.5'>
                           {!isNight() ? (
-                            // Next is sunset
                             <>
-                              <span className='font-semibold'>{formatTime(weatherData?.sys?.sunset || 0)}</span>
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                width='16'
-                                height='16'
-                                viewBox='0 0 24 24'
-                                fill='none'
-                                stroke='currentColor'
-                                strokeWidth='2'
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                className='text-indigo-500'
-                              >
-                                <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' />
-                              </svg>
+                              <span className='font-semibold'>
+                                {formatTime(sunTimes?.sunset || 0)}
+                              </span>
+                              <SunriseIcon
+                                size={20}
+                                className='text-yellow-500'
+                              />
                             </>
                           ) : (
-                            // Next is sunrise
                             <>
-                              <span className='font-semibold'>{formatTime(weatherData?.sys?.sunrise || 0)}</span>
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                width='16'
-                                height='16'
-                                viewBox='0 0 24 24'
-                                fill='none'
-                                stroke='currentColor'
-                                strokeWidth='2'
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                className='text-yellow-500'
-                              >
-                                <circle cx='12' cy='12' r='4' />
-                                <path d='M12 2v2' />
-                                <path d='M12 20v2' />
-                                <path d='m4.93 4.93 1.41 1.41' />
-                                <path d='m17.66 17.66 1.41 1.41' />
-                                <path d='M2 12h2' />
-                                <path d='M20 12h2' />
-                                <path d='m6.34 17.66-1.41 1.41' />
-                                <path d='m19.07 4.93-1.41 1.41' />
-                              </svg>
+                              <span className='font-semibold'>
+                                {formatTime(sunTimes?.sunrise || 0)}
+                              </span>
+                              <SunsetIcon
+                                size={20}
+                                className='text-indigo-500'
+                              />
                             </>
                           )}
                         </div>
                       </div>
                     </div>
-                    
-                    {/* Day length or night length information */}
-                    <div className='mt-3 pt-3 border-t border-amber-200/50 dark:border-amber-800/30 text-sm text-muted-foreground flex justify-between'>
-                      <span>
-                        {!isNight() 
-                          ? `${language?.weather?.dayLength || 'Day length'}: ${formatDayLength(weatherData?.sys?.sunset || 0, weatherData?.sys?.sunrise || 0)}`
-                          : `${language?.weather?.nightLength || 'Night length'}: ${formatNightLength(weatherData?.sys?.sunset || 0, weatherData?.sys?.sunrise || 0)}`}
-                      </span>
-                      <span>
-                        {formatLocationTime()}
-                      </span>
+                    <div className='mt-3 pt-3 border-t border-amber-200/50 dark:border-amber-800/30'>
+                      <div className='flex flex-col gap-1'>
+                        <div className='text-[10px] xs:text-xs text-muted-foreground'>
+                          {!isNight()
+                            ? language?.weather?.dayLength || 'Day length'
+                            : language?.weather?.nightLength || 'Night length'}
+                        </div>
+                        <div className='text-xs xs:text-sm font-medium'>
+                          {!isNight()
+                            ? formatDayLength(
+                                sunTimes?.sunset || 0,
+                                sunTimes?.sunrise || 0
+                              )
+                            : formatNightLength(
+                                sunTimes?.sunset || 0,
+                                sunTimes?.sunrise || 0
+                              )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -731,18 +722,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
             </div>
           </CardContent>
         </Card>
-        <div className='flex flex-wrap gap-3 justify-between items-center'>
-          <div className='flex items-center gap-2'>
-            <h2 className='text-2xl font-bold'>
-              {weatherData.name}
-              {weatherData.sys.country && (
-                <span className='ml-2'>
-                  {getFlagEmoji(weatherData.sys.country)}
-                </span>
-              )}
-            </h2>
-          </div>
-        </div>
+        <div className='flex flex-wrap gap-3 justify-between items-center'></div>
       </div>
     </div>
   );
