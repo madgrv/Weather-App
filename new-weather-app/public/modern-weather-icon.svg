@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ultra-minimal, modern weather icon with gradient background -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e40af" />
+      <stop offset="40%" stop-color="#3b82f6" />
+      <stop offset="70%" stop-color="#93c5fd" />
+      <stop offset="100%" stop-color="#dbeafe" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.2" />
+    </filter>
+    <clipPath id="circle-clip">
+      <circle cx="256" cy="256" r="256" />
+    </clipPath>
+  </defs>
+  
+  <!-- Perfectly round background -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg-gradient)" />
+  
+  <!-- Sun rising from the bottom (moved up) with clipping -->
+  <g clip-path="url(#circle-clip)">
+    <circle cx="256" cy="352" r="160" fill="#f97316" filter="url(#shadow)" />
+  </g>
+  
+  <!-- No cloud, just the sun for a more minimal look -->
+</svg>
