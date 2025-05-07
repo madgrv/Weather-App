@@ -7,7 +7,7 @@ import { Badge } from '../ui/badge';
 import { useLanguage } from '../../lib/language/useLanguage';
 import { RefreshCw } from 'lucide-react';
 import { getSunTimes } from '../../lib/sunTimes';
-import { SunriseIcon, SunsetIcon } from '../ui/svgs';
+import { SunriseIcon, SunsetIcon, MoonIcon } from '../ui/svgs';
 
 type WeatherDisplayProps = {
   selectedLocation: Location;
@@ -453,27 +453,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                   <>
                     <div className='flex items-center gap-3'>
                       <div className='bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-full'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          width='24'
-                          height='24'
-                          viewBox='0 0 24 24'
-                          fill='none'
-                          stroke='currentColor'
-                          strokeWidth='2'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          className='text-yellow-500'
-                        >
-                          <circle cx='12' cy='16' r='4' />
-                          <path d='M12 2v6' />
-                          <path d='m4.93 10.93 1.41 1.41' />
-                          <path d='M2 18h2' />
-                          <path d='M20 18h2' />
-                          <path d='m19.07 10.93-1.41 1.41' />
-                          <path d='M22 22H2' />
-                          <path d='m8 5 4-4 4 4' />
-                        </svg>
+                        <SunriseIcon size={24} className='text-yellow-500' />
                       </div>
                       <div>
                         <p className='text-sm text-muted-foreground'>
@@ -486,27 +466,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                     </div>
                     <div className='flex items-center gap-3'>
                       <div className='bg-orange-100 dark:bg-orange-900/30 p-2 rounded-full'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          width='24'
-                          height='24'
-                          viewBox='0 0 24 24'
-                          fill='none'
-                          stroke='currentColor'
-                          strokeWidth='2'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          className='text-orange-500'
-                        >
-                          <path d='M12 8V2' />
-                          <path d='m4.93 10.93 1.41-1.41' />
-                          <path d='M2 18h2' />
-                          <path d='M20 18h2' />
-                          <path d='m19.07 10.93-1.41-1.41' />
-                          <path d='M22 22H2' />
-                          <path d='m16 6-4 4-4-4' />
-                          <path d='M16 18a4 4 0 0 0-8 0' />
-                        </svg>
+                        <SunsetIcon size={24} className='text-orange-500' />
                       </div>
                       <div>
                         <p className='text-sm text-muted-foreground'>
@@ -522,20 +482,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                   <>
                     <div className='flex items-center gap-3'>
                       <div className='bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-full'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          width='24'
-                          height='24'
-                          viewBox='0 0 24 24'
-                          fill='none'
-                          stroke='currentColor'
-                          strokeWidth='2'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          className='text-indigo-500'
-                        >
-                          <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' />
-                        </svg>
+                        <MoonIcon size={24} className='text-indigo-500' />
                       </div>
                       <div>
                         <p className='text-sm text-muted-foreground'>
@@ -548,28 +495,7 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                     </div>
                     <div className='flex items-center gap-3'>
                       <div className='bg-yellow-100 dark:bg-yellow-900/30 p-2 rounded-full'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          width='24'
-                          height='24'
-                          viewBox='0 0 24 24'
-                          fill='none'
-                          stroke='currentColor'
-                          strokeWidth='2'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          className='text-yellow-500'
-                        >
-                          <circle cx='12' cy='12' r='4' />
-                          <path d='M12 2v2' />
-                          <path d='M12 20v2' />
-                          <path d='m4.93 4.93 1.41 1.41' />
-                          <path d='m17.66 17.66 1.41 1.41' />
-                          <path d='M2 12h2' />
-                          <path d='M20 12h2' />
-                          <path d='m6.34 17.66-1.41 1.41' />
-                          <path d='m19.07 4.93-1.41 1.41' />
-                        </svg>
+                        <SunriseIcon size={24} className='text-yellow-500' />
                       </div>
                       <div>
                         <p className='text-sm text-muted-foreground'>
@@ -607,43 +533,12 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                           }`}
                         >
                           {!isNight() ? (
-                            <svg
-                              xmlns='http://www.w3.org/2000/svg'
-                              width='20'
-                              height='20'
-                              viewBox='0 0 24 24'
-                              fill='none'
-                              stroke='currentColor'
-                              strokeWidth='2'
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
+                            <SunriseIcon
+                              size={20}
                               className='text-yellow-500'
-                            >
-                              <circle cx='12' cy='12' r='4' />
-                              <path d='M12 22v-8' />
-                              <path d='m4.93 10.93 1.41 1.41' />
-                              <path d='M2 18h2' />
-                              <path d='M20 18h2' />
-                              <path d='m19.07 10.93-1.41 1.41' />
-                              <path d='M22 22H2' />
-                              <path d='m8 20 4-4 4 4' />
-                              <path d='M16 20a4 4 0 0 0-8 0' />
-                            </svg>
+                            />
                           ) : (
-                            <svg
-                              xmlns='http://www.w3.org/2000/svg'
-                              width='20'
-                              height='20'
-                              viewBox='0 0 24 24'
-                              fill='none'
-                              stroke='currentColor'
-                              strokeWidth='2'
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              className='text-indigo-500'
-                            >
-                              <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' />
-                            </svg>
+                            <MoonIcon size={20} className='text-indigo-500' />
                           )}
                         </div>
                         <div>
@@ -677,9 +572,9 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                               <span className='font-semibold'>
                                 {formatTime(sunTimes?.sunset || 0)}
                               </span>
-                              <SunriseIcon
+                              <SunsetIcon
                                 size={20}
-                                className='text-yellow-500'
+                                className='text-orange-500'
                               />
                             </>
                           ) : (
@@ -687,9 +582,9 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
                               <span className='font-semibold'>
                                 {formatTime(sunTimes?.sunrise || 0)}
                               </span>
-                              <SunsetIcon
+                              <SunriseIcon
                                 size={20}
-                                className='text-indigo-500'
+                                className='text-yellow-500'
                               />
                             </>
                           )}
