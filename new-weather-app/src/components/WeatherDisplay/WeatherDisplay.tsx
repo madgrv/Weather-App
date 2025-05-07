@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getFlagEmoji, getWeatherIcon } from '../../helpers';
+import { getFlagEmoji } from '../../helpers';
+import { WeatherIcon } from '../ui/svgs';
 import { Location, WeatherData } from '../../types';
 import config from '../../config';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
@@ -272,11 +273,14 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
         <div className='flex items-center justify-between flex-wrap gap-3'>
           <div className='flex items-center gap-3'>
             {weatherData.weather[0].icon && (
-              <img
-                src={getWeatherIcon(weatherData.weather[0].icon)}
-                alt={weatherData.weather[0].description}
-                className='w-10 h-10 rounded-md p-0.5'
-              />
+              <div className='w-10 h-10 flex items-center justify-center rounded-md p-0.5'>
+                <WeatherIcon
+                  iconCode={weatherData.weather[0].icon}
+                  size={36}
+                  alt={weatherData.weather[0].description}
+                  className='text-primary'
+                />
+              </div>
             )}
             <h2 className='text-xl font-semibold text-foreground'>
               {language?.weather?.cardTitle || 'Weather in'}{' '}
@@ -330,11 +334,14 @@ export const WeatherDisplay = ({ selectedLocation }: WeatherDisplayProps) => {
             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
               <div className='flex items-center gap-3 sm:gap-4'>
                 {weatherData.weather[0].icon && (
-                  <img
-                    src={getWeatherIcon(weatherData.weather[0].icon)}
-                    alt={weatherData.weather[0].description}
-                    className='w-12 h-12 sm:w-16 sm:h-16 rounded-md p-1'
-                  />
+                  <div className='w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-md p-1'>
+                    <WeatherIcon
+                      iconCode={weatherData.weather[0].icon}
+                      size={48}
+                      alt={weatherData.weather[0].description}
+                      className='text-primary'
+                    />
+                  </div>
                 )}
                 <div>
                   <div className='flex items-end gap-1 sm:gap-2'>
