@@ -1,6 +1,6 @@
 {
-  "short_name": "SkyView",
-  "name": "SkyView Weather",
+  "short_name": "WeatherUp!",
+  "name": "WeatherUp!",
   "icons": [
     {
       "src": "modern-weather-icon.svg",
